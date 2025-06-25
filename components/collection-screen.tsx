@@ -4,13 +4,23 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ShoppingBag, ArrowLeft, Square, CheckSquare, ChevronDown, ChevronRight } from "lucide-react"
+import PhotocardMaker from "@/components/photocard-maker"
 
 interface CollectionScreenProps {
   onBackToMain: () => void
   onShowPurchase: () => void
+  onShowPhysicalOrder: (cards: any) => void
 }
 
-export default function CollectionScreen({ onBackToMain, onShowPurchase }: CollectionScreenProps) {
+export default function CollectionScreen({ onBackToMain, onShowPurchase, onShowPhysicalOrder }: CollectionScreenProps) {
+  const [selectMode, setSelectMode] = useState(false)
+  const [selectedCards, setSelectedCards] = useState<number[]>([])
+  const [gradeFilter, setGradeFilter] = useState<"all" | "S" | "A" | "C">("all")
+  const [expandedInfluencer, setExpandedInfluencer] = useState<string | null>(null)
+  const [selectedImage, setSelectedImage] = useState<any>(null)
+  const [showDownloadConfirm, setShowDownloadConfirm] = useState(false)
+  const [showPhotocardMaker, setShowPhotocardMaker] = useState(false)
+
   // 더미 데이터 - 실제로는 상태 관리 라이브러리나 컨텍스트를 사용하여 관리
   const influencers = [
     {
@@ -48,6 +58,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
         name: "김민지-S급화보",
         collected: true,
+        influencer: "김민지"
       },
       {
         id: 2,
@@ -55,6 +66,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
         name: "김민지-S급화보",
         collected: false,
+        influencer: "김민지"
       },
       {
         id: 3,
@@ -62,6 +74,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "김민지-A급화보",
         collected: true,
+        influencer: "김민지"
       },
       {
         id: 4,
@@ -69,6 +82,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "김민지-A급화보",
         collected: true,
+        influencer: "김민지"
       },
       {
         id: 5,
@@ -76,6 +90,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "김민지-A급화보",
         collected: false,
+        influencer: "김민지"
       },
       {
         id: 6,
@@ -83,6 +98,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "김민지-C급화보",
         collected: true,
+        influencer: "김민지"
       },
       {
         id: 7,
@@ -90,6 +106,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "김민지-C급화보",
         collected: true,
+        influencer: "김민지"
       },
       {
         id: 8,
@@ -97,6 +114,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "김민지-C급화보",
         collected: false,
+        influencer: "김민지"
       },
     ],
     inf2: [
@@ -106,6 +124,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
         name: "이하은-S급화보",
         collected: false,
+        influencer: "이하은"
       },
       {
         id: 10,
@@ -113,6 +132,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "이하은-A급화보",
         collected: true,
+        influencer: "이하은"
       },
       {
         id: 11,
@@ -120,6 +140,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "이하은-A급화보",
         collected: false,
+        influencer: "이하은"
       },
       {
         id: 12,
@@ -127,6 +148,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "이하은-C급화보",
         collected: true,
+        influencer: "이하은"
       },
       {
         id: 13,
@@ -134,6 +156,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "이하은-C급화보",
         collected: true,
+        influencer: "이하은"
       },
     ],
     inf3: [
@@ -143,6 +166,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
         name: "박서아-S급화보",
         collected: false,
+        influencer: "박서아"
       },
       {
         id: 15,
@@ -150,6 +174,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "박서아-A급화보",
         collected: true,
+        influencer: "박서아"
       },
       {
         id: 16,
@@ -157,6 +182,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "박서아-C급화보",
         collected: true,
+        influencer: "박서아"
       },
     ],
     inf4: [
@@ -165,7 +191,8 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         grade: "S",
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
         name: "정다현-S급화보",
-        collected: true,
+        collected: false,
+        influencer: "정다현"
       },
       {
         id: 18,
@@ -173,13 +200,15 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "정다현-A급화보",
         collected: true,
+        influencer: "정다현"
       },
       {
         id: 19,
         grade: "A",
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
         name: "정다현-A급화보",
-        collected: false,
+        collected: true,
+        influencer: "정다현"
       },
       {
         id: 20,
@@ -187,6 +216,7 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "정다현-C급화보",
         collected: true,
+        influencer: "정다현"
       },
       {
         id: 21,
@@ -194,22 +224,10 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
         name: "정다현-C급화보",
         collected: true,
+        influencer: "정다현"
       },
     ],
   }
-
-  const [selectedCards, setSelectedCards] = useState<number[]>([])
-  const [selectMode, setSelectMode] = useState(false)
-  const [gradeFilter, setGradeFilter] = useState<"all" | "S" | "A" | "C">("all")
-  const [expandedInfluencer, setExpandedInfluencer] = useState<string | null>("inf1") // 기본적으로 첫 번째 인플루언서 확장
-  const [viewingCard, setViewingCard] = useState<any>(null)
-  const [selectedImage, setSelectedImage] = useState<{
-    id: number
-    image: string
-    name: string
-    grade: string
-  } | null>(null)
-  const [showDownloadConfirm, setShowDownloadConfirm] = useState(false)
 
   const toggleCardSelection = (id: number) => {
     if (selectedCards.includes(id)) {
@@ -222,15 +240,12 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
   const toggleSelectMode = () => {
     setSelectMode(!selectMode)
     if (selectMode) {
-      // 선택 모드를 끄면 선택된 카드 초기화
       setSelectedCards([])
     }
   }
 
   const selectAll = () => {
     const allCollectedIds: number[] = []
-
-    // 모든 인플루언서의 수집된 카드 ID를 가져옴
     Object.values(cardsByInfluencer).forEach((cards) =>
       cards.forEach((card) => {
         if (card.collected && (gradeFilter === "all" || card.grade === gradeFilter)) {
@@ -238,7 +253,6 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         }
       }),
     )
-
     setSelectedCards(allCollectedIds)
   }
 
@@ -273,29 +287,54 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
     })
   })
 
-  const handleCardClick = (card: (typeof cardsByInfluencer)["inf1"][0]) => {
-    if (card.collected) {
-      if (selectMode) {
-        toggleCardSelection(card.id)
-      } else {
-        setSelectedImage(card)
-      }
+  // 선택된 카드들의 데이터 가져오기
+  const getSelectedCardsData = () => {
+    const selectedCardsData: any[] = []
+    Object.values(cardsByInfluencer).forEach((cards) => {
+      cards.forEach((card) => {
+        if (selectedCards.includes(card.id)) {
+          selectedCardsData.push(card)
+        }
+      })
+    })
+    return selectedCardsData
+  }
+
+  // 포토카드 제작 버튼 클릭
+  const handleMakePhotocard = () => {
+    if (selectedCards.length > 0) {
+      setShowPhotocardMaker(true)
     }
   }
 
-  const handleDownload = () => {
-    setShowDownloadConfirm(true)
+  // 포토카드 다운로드 완료
+  const handleDownloadComplete = (cards: any[]) => {
+    setShowPhotocardMaker(false)
+    setSelectMode(false)
+    setSelectedCards([])
+    // 성공 메시지 표시
+    alert(`${cards.length}장의 포토카드가 다운로드되었습니다.`)
   }
 
-  const confirmDownload = () => {
-    // 실제로는 여기서 다운로드 로직 구현
-    alert("이미지가 다운로드되었습니다.")
-    setShowDownloadConfirm(false)
-    setViewingCard(null)
+  // 실물 주문 처리
+  const handlePhysicalOrder = (cards: any[]) => {
+    setShowPhotocardMaker(false)
+    onShowPhysicalOrder(cards)
+  }
+
+  // 포토카드 메이커가 활성화된 경우
+  if (showPhotocardMaker) {
+    return (
+      <PhotocardMaker
+        selectedCards={getSelectedCardsData()}
+        onBack={() => setShowPhotocardMaker(false)}
+        onDownload={handleDownloadComplete}
+        onOrderPhysical={handlePhysicalOrder}
+      />
+    )
   }
 
   const renderCardGrid = (cards: (typeof cardsByInfluencer)["inf1"]) => {
-    // 등급 필터 적용
     const filteredCards = gradeFilter === "all" ? cards : cards.filter((card) => card.grade === gradeFilter)
 
     if (filteredCards.length === 0) {
@@ -307,7 +346,9 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         {filteredCards.map((card) => (
           <div key={card.id} className="relative">
             <div
-              className={`aspect-[2/3] rounded-lg overflow-hidden ${!card.collected ? "opacity-50 grayscale" : ""}`}
+              className={`aspect-[2/3] rounded-lg overflow-hidden cursor-pointer ${
+                !card.collected ? "opacity-50 grayscale" : ""
+              }`}
               onClick={() => card.collected && (selectMode ? toggleCardSelection(card.id) : setSelectedImage(card))}
             >
               <img src={card.image || "/placeholder.svg"} alt={card.name} className="w-full h-full object-cover" />
@@ -446,7 +487,6 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
           const cards = cardsByInfluencer[influencer.id as keyof typeof cardsByInfluencer] || []
           const filteredCards = gradeFilter === "all" ? cards : cards.filter((card) => card.grade === gradeFilter)
 
-          // 해당 등급의 카드가 없으면 표시하지 않음
           if (filteredCards.length === 0) return null
 
           const collectedCount = filteredCards.filter((card) => card.collected).length
@@ -478,9 +518,10 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
         })}
       </div>
 
+      {/* 선택된 카드가 있을 때 하단 제작 버튼 */}
       {selectedCards.length > 0 && (
         <div className="fixed bottom-16 left-0 right-0 p-4 bg-black border-t border-gray-800">
-          <Button onClick={onShowPurchase} className="w-full py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">
+          <Button onClick={handleMakePhotocard} className="w-full py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">
             <ShoppingBag className="mr-2 h-4 w-4" />
             선택한 {selectedCards.length}개 포토카드 만들기
           </Button>
@@ -490,7 +531,6 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
       {/* 이미지 상세보기 모달 */}
       {selectedImage && (
         <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4">
-          {/* 상단 헤더 추가 - 뒤로가기 버튼 포함 */}
           <div className="fixed top-0 left-0 right-0 bg-black/80 p-4 flex items-center z-50">
             <Button variant="ghost" size="icon" onClick={() => setSelectedImage(null)} className="mr-2">
               <ArrowLeft className="h-5 w-5 text-white" />
@@ -523,10 +563,16 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
                 <h3 className="text-lg font-bold mb-2">{selectedImage.name}</h3>
 
                 <div className="grid grid-cols-2 gap-2 mt-4">
-                  <Button onClick={() => onShowPurchase()} className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">
+                  <Button 
+                    onClick={() => {
+                      setSelectedCards([selectedImage.id])
+                      setSelectedImage(null)
+                      setShowPhotocardMaker(true)
+                    }} 
+                    className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
+                  >
                     포토카드 제작
                   </Button>
-                  {/* 다운로드 버튼 글자색 검정색으로 변경 */}
                   <Button
                     onClick={() => setShowDownloadConfirm(true)}
                     variant="outline"
@@ -560,8 +606,11 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase }: Colle
               <Button
                 className="flex-1 bg-[#FF0844]"
                 onClick={() => {
-                  // 다운로드 로직 구현
-                  alert("다운로드가 시작됩니다.")
+                  // 실제 다운로드 로직
+                  const link = document.createElement('a')
+                  link.download = `${selectedImage.name}.jpg`
+                  link.href = selectedImage.image
+                  link.click()
                   setShowDownloadConfirm(false)
                   setSelectedImage(null)
                 }}

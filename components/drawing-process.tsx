@@ -3,7 +3,12 @@
 import { useState, useEffect } from "react"
 import { Sparkles, Star } from "lucide-react"
 
-export default function DrawingProcess() {
+interface DrawingProcessProps {
+  onDrawComplete: (card: any) => void // 이 prop 추가
+}
+
+// ✅ 여기를 수정! props를 받도록 변경
+export default function DrawingProcess({ onDrawComplete }: DrawingProcessProps) {
   const [stage, setStage] = useState<"initial" | "glow" | "silhouette" | "reveal">("initial")
 
   useEffect(() => {
@@ -11,13 +16,26 @@ export default function DrawingProcess() {
     const timer1 = setTimeout(() => setStage("glow"), 500)
     const timer2 = setTimeout(() => setStage("silhouette"), 1500)
     const timer3 = setTimeout(() => setStage("reveal"), 2500)
+    
+    // ✅ 여기에 추가! reveal 단계 후에 onDrawComplete 호출
+    const timer4 = setTimeout(() => {
+      // 더미 카드 데이터
+      const card = {
+        id: 1,
+        grade: "A",
+        name: "환승모델-A급화보",
+        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급"
+      }
+      onDrawComplete(card)
+    }, 3500)
 
     return () => {
       clearTimeout(timer1)
       clearTimeout(timer2)
       clearTimeout(timer3)
+      clearTimeout(timer4) // ✅ 이것도 추가
     }
-  }, [])
+  }, [onDrawComplete]) 
 
   return (
     <div className="flex flex-col items-center justify-center h-full">

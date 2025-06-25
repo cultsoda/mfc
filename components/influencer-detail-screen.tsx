@@ -8,7 +8,7 @@ import { ChevronRight, ArrowLeft, Home, Heart, Grid3X3, ShoppingBag, User } from
 import ShareButton from "./share-button"
 
 interface InfluencerDetailScreenProps {
-  influencerId: string
+  influencerId: string | null
   onBack: () => void
   onStartDrawing: () => void
   onShowPurchase: () => void
@@ -20,6 +20,16 @@ export default function InfluencerDetailScreen({
   onStartDrawing,
   onShowPurchase,
 }: InfluencerDetailScreenProps) {
+
+    // ✅ 여기에 추가!
+  if (!influencerId) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p>인플루언서를 선택해주세요</p>
+      </div>
+    )
+  }
+  
   const [isShaking, setIsShaking] = useState(false)
   const [puzzleProgress, setPuzzleProgress] = useState(7) // 총 20개 중 7개 완료
   const [points, setPoints] = useState(10) // 보유 뽑기권

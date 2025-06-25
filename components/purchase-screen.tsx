@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button"
 import { ArrowLeft, ChevronDown } from "lucide-react"
 
 interface PurchaseScreenProps {
-  onBackToMain: () => void
+  onBack: () => void          // onBackToMain → onBack으로 변경
+  onShowShipping: () => void  // 이 prop 추가
 }
 
-export default function PurchaseScreen({ onBackToMain }: PurchaseScreenProps) {
+export default function PurchaseScreen({ onBack, onShowShipping }: PurchaseScreenProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null)
 
@@ -25,7 +26,7 @@ export default function PurchaseScreen({ onBackToMain }: PurchaseScreenProps) {
   return (
     <div className="flex flex-col h-full bg-black text-white">
       <div className="flex items-center mb-6">
-        <Button variant="ghost" size="icon" onClick={onBackToMain} className="mr-2 -ml-3">
+        <Button variant="ghost" size="icon" onClick={onBack} className="mr-2 -ml-3">
           <ArrowLeft className="h-5 w-5 text-white" />
         </Button>
         <h2 className="text-xl font-bold">뽑기권 구매</h2>
@@ -109,7 +110,17 @@ export default function PurchaseScreen({ onBackToMain }: PurchaseScreenProps) {
           </div>
         </div>
 
-        <Button className="w-full py-6 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" disabled={!selectedPackage}>
+        <Button className="w-full py-6 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" disabled={!selectedPackage}
+          onClick={() => {
+            if (selectedPackage) {
+              // 결제 처리 로직 (실제로는 결제 API 호출)
+              console.log('결제 완료:', selectedPackage)
+              
+              // 배송 정보 입력 화면으로 이동
+              onShowShipping()
+            }
+          }}
+        >
           결제하기
         </Button>
         <div className="text-xs text-gray-400 text-center mt-2">

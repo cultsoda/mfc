@@ -9,10 +9,11 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 interface ShippingFormProps {
   onBack: () => void
-  selectedCount: number
+  onComplete: () => void  // ✅ 이 prop 추가
+  // selectedCount: number  // ✅ 이 prop 제거 (app/page.tsx에서 전달하지 않음)
 }
 
-export default function ShippingForm({ onBack, selectedCount }: ShippingFormProps) {
+export default function ShippingForm({ onBack, onComplete }: ShippingFormProps) {
   const [shippingType, setShippingType] = useState<"domestic" | "international">("domestic")
 
   return (
@@ -164,7 +165,18 @@ export default function ShippingForm({ onBack, selectedCount }: ShippingFormProp
           <div className="text-right font-bold text-lg mt-2">202,000원</div>
         </div>
 
-        <Button className="w-full py-6 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">결제하기</Button>
+        <Button 
+          className="w-full py-6 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
+          onClick={() => {
+            // 결제 처리 로직 (실제로는 결제 API 호출)
+            console.log('배송 정보 및 결제 완료')
+            
+            // 마이페이지로 이동
+            onComplete()
+          }}
+        >
+          결제하기
+        </Button>
         <div className="text-xs text-gray-400 text-center mt-2">
           약관 및 주의 사항을 확인하였으며, 결제 계속 동의합니다.
         </div>

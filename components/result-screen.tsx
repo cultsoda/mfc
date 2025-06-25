@@ -5,7 +5,8 @@ import { Progress } from "@/components/ui/progress"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
-import confetti from "canvas-confetti"
+// ✅ 더 좋은 해결책
+const confetti = require("canvas-confetti")
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ShippingForm from "./shipping-form"
 // 상단에 ShareButton import 추가
@@ -23,6 +24,7 @@ interface ResultScreenProps {
   onAddToCollection: () => void
   onShowCollection: () => void
   onShowPurchase: () => void
+  onShowMission?: () => void
 }
 
 export default function ResultScreen({
@@ -191,7 +193,15 @@ export default function ResultScreen({
   }, [card])
 
   if (showShipping) {
-    return <ShippingForm onBack={() => setShowShipping(false)} selectedCount={1} />
+    return (
+      <ShippingForm 
+        onBack={() => setShowShipping(false)} 
+        onComplete={() => {
+          setShowShipping(false)
+          // 완료 후 처리 (예: 성공 메시지 표시)
+        }} 
+      />
+    )
   }
 
   if (!card) return null

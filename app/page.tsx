@@ -1,7 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, Home, User, Grid3X3, ShoppingBag, Heart } from "lucide-react"
+import { Home, Users, Grid3X3, ShoppingBag, User } from "lucide-react"
+import { Button } from "@/components/ui/button"
+
+// 기존 컴포넌트들 import
 import DrawingProcess from "@/components/drawing-process"
 import ResultScreen from "@/components/result-screen"
 import CollectionScreen from "@/components/collection-screen"
@@ -10,12 +13,50 @@ import PurchaseScreen from "@/components/purchase-screen"
 import ShippingForm from "@/components/shipping-form"
 import InfluencerListScreen from "@/components/influencer-list-screen"
 import InfluencerDetailScreen from "@/components/influencer-detail-screen"
-import VotingScreen from "@/components/voting-screen"
 import MyPage from "@/components/my-page"
-import { Button } from "@/components/ui/button"
 
-export default function Page() {
+// 새로운 컴포넌트들 (실제 프로젝트에서는 해당 파일들을 생성해야 함)
+// import VotingScreen from "@/components/voting-screen-updated"
+// import AuctionScreen from "@/components/auction-screen" 
+// import PhotocardMaker from "@/components/photocard-maker"
+// import PhysicalOrderForm from "@/components/physical-order-form"
+
+// 임시 컴포넌트들 (실제로는 위의 새로운 컴포넌트들로 교체)
+const VotingScreen = ({ onBack }: { onBack: () => void }) => (
+  <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-4">
+    <button onClick={onBack} className="mb-4 p-2 bg-gray-200 rounded">← 뒤로가기</button>
+    <h1 className="text-2xl font-bold text-center">투표하기 (구현 예정)</h1>
+    <p className="text-center text-gray-600 mt-4">투표 기능이 여기에 구현됩니다.</p>
+  </div>
+)
+
+const AuctionScreen = ({ onBack }: { onBack: () => void }) => (
+  <div className="min-h-screen bg-black text-white p-4">
+    <button onClick={onBack} className="mb-4 p-2 bg-gray-800 rounded text-white">← 뒤로가기</button>
+    <h1 className="text-2xl font-bold text-center">굿즈 경매 (구현 예정)</h1>
+    <p className="text-center text-gray-400 mt-4">굿즈 경매 기능이 여기에 구현됩니다.</p>
+  </div>
+)
+
+const PhotocardMaker = ({ selectedCards, onBack, onDownload, onOrderPhysical }: any) => (
+  <div className="min-h-screen bg-black text-white p-4">
+    <button onClick={onBack} className="mb-4 p-2 bg-gray-800 rounded">← 뒤로가기</button>
+    <h1 className="text-2xl font-bold text-center">포토카드 제작 (구현 예정)</h1>
+    <p className="text-center text-gray-400 mt-4">포토카드 제작 기능이 여기에 구현됩니다.</p>
+  </div>
+)
+
+const PhysicalOrderForm = ({ selectedCards, onBack, onOrderComplete }: any) => (
+  <div className="min-h-screen bg-black text-white p-4">
+    <button onClick={onBack} className="mb-4 p-2 bg-gray-800 rounded">← 뒤로가기</button>
+    <h1 className="text-2xl font-bold text-center">실물 주문 (구현 예정)</h1>
+    <p className="text-center text-gray-400 mt-4">실물 주문 기능이 여기에 구현됩니다.</p>
+  </div>
+)
+
+export default function MainApp() {
   const [screen, setScreen] = useState<
+    | "home"
     | "influencer-list"
     | "influencer-detail"
     | "drawing"
@@ -25,21 +66,22 @@ export default function Page() {
     | "purchase"
     | "shipping"
     | "voting"
+    | "auction"
     | "my-page"
-  >("influencer-list")
+    | "photocard-maker"
+    | "physical-order"
+  >("home")
 
-  // 이전 화면을 저장하는 상태 추가
-  const [previousScreen, setPreviousScreen] = useState<string | null>(null)
-
-  // 마이 페이지의 활성 탭을 저장하는 상태 추가
-  const [myPageActiveTab, setMyPageActiveTab] = useState<"purchase-history" | "my-collection">("purchase-history")
-
+  // 상태 관리
   const [selectedInfluencer, setSelectedInfluencer] = useState<string | null>(null)
   const [currentCard, setCurrentCard] = useState<any>(null)
+  const [selectedCards, setSelectedCards] = useState<any[]>([])
+  const [myPageActiveTab, setMyPageActiveTab] = useState<"purchase-history" | "my-collection">("purchase-history")
 
-  // 현재 활성화된 탭을 결정하는 함수
+  // 현재 활성 탭 결정
   const getActiveTab = () => {
     switch (screen) {
+      case "home":
       case "influencer-list":
       case "influencer-detail":
       case "drawing":
@@ -47,6 +89,8 @@ export default function Page() {
         return "photos"
       case "voting":
         return "voting"
+      case "auction":
+        return "auction"
       case "my-page":
       case "collection":
         return "my"
@@ -55,204 +99,294 @@ export default function Page() {
     }
   }
 
-  // 화면 전환 함수 - 이전 화면 저장 기능 추가
-  const navigateTo = (nextScreen: typeof screen) => {
-    setPreviousScreen(screen)
-    setScreen(nextScreen)
-  }
+  // 홈 화면 (화보뽑기 메인)
+  const renderHomeScreen = () => (
+    <div className="min-h-screen bg-black text-white flex flex-col">
+      {/* 헤더 */}
+      <div className="bg-black p-4 text-center border-b border-gray-800">
+        <h1 className="text-2xl font-bold text-[#FF0844]">MFC</h1>
+        <p className="text-sm text-gray-500">엑스로메다 MFC 이벤트</p>
+      </div>
 
-  const handleSelectInfluencer = (id: string) => {
-    setSelectedInfluencer(id)
-    navigateTo("influencer-detail")
-  }
+      {/* 메인 콘텐츠 */}
+      <div className="flex-1 p-4">
+        {/* 화보 뽑기 안내 */}
+        <div className="bg-gradient-to-r from-pink-500 to-purple-600 p-6 rounded-lg mb-6 text-center">
+          <h2 className="text-xl font-bold mb-2">화보 뽑기 이벤트</h2>
+          <p className="text-sm opacity-90 mb-4">
+            인플루언서의 화보를 뽑고 미션을 완성하여 미공개 화보를 획득하세요!
+          </p>
+          <Button 
+            className="bg-white text-purple-600 hover:bg-gray-100"
+            onClick={() => setScreen("influencer-list")}
+          >
+            화보뽑기 시작하기
+          </Button>
+        </div>
 
-  const handleStartDrawing = () => {
-    navigateTo("drawing")
+        {/* 퀵 액션 */}
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div 
+            className="bg-gray-900 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-800"
+            onClick={() => setScreen("voting")}
+          >
+            <Users className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+            <p className="font-medium">투표하기</p>
+            <p className="text-xs text-gray-400">응원 투표 참여</p>
+          </div>
+          
+          <div 
+            className="bg-gray-900 p-4 rounded-lg text-center cursor-pointer hover:bg-gray-800"
+            onClick={() => setScreen("auction")}
+          >
+            <ShoppingBag className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+            <p className="font-medium">굿즈 경매</p>
+            <p className="text-xs text-gray-400">한정 굿즈 경매</p>
+          </div>
+        </div>
 
-    // 3초 후에 결과 화면으로 이동
-    setTimeout(() => {
-      // 랜덤하게 카드 등급 결정 (S, A, C)
-      const grades = [
-        "S",
-        "S",
-        "S",
-        "A",
-        "A",
-        "A",
-        "A",
-        "A",
-        "A",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-        "C",
-      ]
-      const randomIndex = Math.floor(Math.random() * grades.length)
-      const grade = grades[randomIndex]
+        {/* 최근 업데이트 */}
+        <div className="bg-gray-900 rounded-lg p-4">
+          <h3 className="font-bold mb-3">최근 업데이트</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-400">• 새로운 포토카드 제작 기능 추가</span>
+              <span className="text-gray-500 text-xs">2일 전</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">• 투표 시스템 개선</span>
+              <span className="text-gray-500 text-xs">1주일 전</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">• 굿즈 경매 서비스 오픈</span>
+              <span className="text-gray-500 text-xs">2주일 전</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 
-      // 카드 정보 설정
-      setCurrentCard({
-        id: Math.floor(Math.random() * 1000),
-        grade,
-        image: `/placeholder.svg?height=400&width=300&text=MFC-${grade}급`,
-        name: `인플루언서명-${grade}급 화보`,
-        description: "엑스로메다 MFC 이벤트",
-      })
-
-      navigateTo("result")
-    }, 3000)
-  }
-
-  // 내 컬렉션 보기 클릭 시 마이 페이지의 내 컬렉션 탭으로 이동
-  const handleShowMyCollection = () => {
-    setMyPageActiveTab("my-collection")
-    navigateTo("my-page")
-  }
-
-  // 뒤로가기 처리 함수
-  const handleBack = () => {
-    if (previousScreen) {
-      setScreen(previousScreen)
-      setPreviousScreen(null)
-    } else {
-      setScreen("influencer-list")
-    }
-  }
-
+  // 화면 렌더링
   const renderScreen = () => {
     switch (screen) {
+      case "home":
+        return renderHomeScreen()
+      
       case "influencer-list":
-        return <InfluencerListScreen onSelectInfluencer={handleSelectInfluencer} />
-      case "influencer-detail":
         return (
-          <InfluencerDetailScreen
-            influencerId={selectedInfluencer || ""}
-            onBack={() => navigateTo("influencer-list")}
-            onStartDrawing={handleStartDrawing}
-            onShowPurchase={() => navigateTo("purchase")}
+          <InfluencerListScreen 
+            onSelectInfluencer={(id) => {
+              setSelectedInfluencer(id)
+              setScreen("influencer-detail")
+            }}
           />
         )
+      
+      case "influencer-detail":
+        return selectedInfluencer ? (
+          <InfluencerDetailScreen
+            influencerId={selectedInfluencer}
+            onBack={() => setScreen("influencer-list")}
+            onStartDrawing={() => setScreen("drawing")}
+            onShowPurchase={() => setScreen("purchase")} // ✅ 이 줄 추가
+          />
+        ) : null
+      
       case "drawing":
-        return <DrawingProcess />
+        return (
+          <DrawingProcess
+            onDrawComplete={(card) => {
+              setCurrentCard(card)
+              setScreen("result")
+            }}
+          />
+        )
+      
       case "result":
         return (
           <ResultScreen
             card={currentCard}
-            onBackToMain={() => navigateTo("influencer-detail")}
-            onAddToCollection={() => navigateTo("collection")}
-            onShowCollection={handleShowMyCollection}
-            onShowPurchase={() => navigateTo("shipping")}
+            onBackToMain={() => setScreen("influencer-detail")}
+            onShowCollection={() => setScreen("collection")}
+            onShowMission={() => setScreen("mission")}
+            onAddToCollection={() => {  // ✅ 파라미터 제거
+              // 컬렉션에 카드 추가 로직
+              console.log('카드 추가:', currentCard) // currentCard 사용
+            }}
+            onShowPurchase={() => setScreen("purchase")}
           />
         )
+      
       case "collection":
         return (
-          <CollectionScreen onBackToMain={() => navigateTo("my-page")} onShowPurchase={() => navigateTo("shipping")} />
+          <CollectionScreen
+            onBackToMain={() => setScreen("home")}
+            onShowPurchase={() => setScreen("purchase")}
+            onShowPhysicalOrder={(cards) => {
+              setSelectedCards(cards)
+              setScreen("physical-order")
+            }}
+          />
         )
+      
       case "mission":
-        return <MissionScreen onBackToMain={() => navigateTo("influencer-list")} />
+        return (
+          <MissionScreen
+            onBackToMain={() => setScreen("home")}
+          />
+        )
+      
       case "purchase":
-        return <PurchaseScreen onBackToMain={handleBack} />
+        return (
+          <PurchaseScreen
+            onBack={() => setScreen("collection")}
+            onShowShipping={() => setScreen("shipping")}
+          />
+        )
+      
       case "shipping":
-        return <ShippingForm onBack={handleBack} selectedCount={1} />
+        return (
+          <ShippingForm
+            onBack={() => setScreen("purchase")}
+            onComplete={() => setScreen("my-page")}
+          />
+        )
+      
       case "voting":
-        return <VotingScreen onBack={() => navigateTo("influencer-list")} />
+        return (
+          <VotingScreen
+            onBack={() => setScreen("home")}
+          />
+        )
+      
+      case "auction":
+        return (
+          <AuctionScreen
+            onBack={() => setScreen("home")}
+          />
+        )
+      
+      case "photocard-maker":
+        return (
+          <PhotocardMaker
+            selectedCards={selectedCards}
+            onBack={() => setScreen("collection")}
+            onDownload={(cards: any) => {  // ✅ any 타입 명시
+              setScreen("collection")
+              // 다운로드 완료 처리
+            }}
+            onOrderPhysical={(cards: any) => {  // ✅ any 타입 명시
+              setSelectedCards(cards)
+              setScreen("physical-order")
+            }}
+          />
+        )
+
+      case "physical-order":
+        return (
+          <PhysicalOrderForm
+            selectedCards={selectedCards}
+            onBack={() => setScreen("collection")}
+            onOrderComplete={(orderData: any) => {  // ✅ any 타입 명시
+              setScreen("my-page")
+              // 주문 완료 처리
+            }}
+          />
+        )
+      
       case "my-page":
         return (
           <MyPage
             activeTab={myPageActiveTab}
             onTabChange={setMyPageActiveTab}
-            onBackToMain={() => navigateTo("influencer-list")}
-            onShowCollection={() => navigateTo("collection")}
-            onGoToPhotos={() => navigateTo("influencer-list")}
+            onBackToMain={() => setScreen("home")}
+            onShowCollection={() => setScreen("collection")}
+            onGoToPhotos={() => setScreen("influencer-list")}
           />
         )
+      
       default:
-        return <InfluencerListScreen onSelectInfluencer={handleSelectInfluencer} />
+        return renderHomeScreen()
     }
   }
 
-  // 바텀 네비게이션 렌더링 함수
-  const renderBottomNav = () => {
-    // 인플루언서 상세 페이지에서는 바텀 탭바 표시하지 않음
-    if (screen === "influencer-detail") return null
-
-    const activeTab = getActiveTab()
-
-    return (
-      <nav className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 py-2 px-4">
-        <div className="flex justify-around max-w-md mx-auto">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigateTo("influencer-list")}
-            className={`${activeTab === "home" ? "text-[#FF0844]" : "text-white"} flex flex-col items-center`}
-          >
-            <Home className="h-5 w-5" />
-            <span className="text-xs mt-1">홈</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigateTo("voting")}
-            className={`${activeTab === "voting" ? "text-[#FF0844]" : "text-white"} flex flex-col items-center`}
-          >
-            <Heart className="h-5 w-5" />
-            <span className="text-xs mt-1">투표</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigateTo("influencer-list")}
-            className={`${activeTab === "photos" ? "text-[#FF0844]" : "text-white"} flex flex-col items-center`}
-          >
-            <Grid3X3 className="h-5 w-5" />
-            <span className="text-xs mt-1">화보</span>
-          </Button>
-          <Button variant="ghost" size="icon" className="text-white flex flex-col items-center">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="text-xs mt-1">굿즈</span>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigateTo("my-page")}
-            className={`${activeTab === "my" ? "text-[#FF0844]" : "text-white"} flex flex-col items-center`}
-          >
-            <User className="h-5 w-5" />
-            <span className="text-xs mt-1">마이</span>
-          </Button>
-        </div>
-      </nav>
-    )
-  }
-
   return (
-    <main className="flex min-h-screen flex-col items-center bg-black text-white pb-16">
-      {/* 헤더 */}
-      {screen !== "influencer-list" && screen !== "voting" && screen !== "my-page" && (
-        <header className="w-full bg-black p-4 flex items-center justify-between border-b border-gray-800">
-          <div className="flex items-center">
-            <Button variant="ghost" size="icon" onClick={handleBack} className="mr-2">
-              <ArrowLeft className="h-5 w-5 text-white" />
-            </Button>
-            <h1 className="text-2xl font-bold text-[#FF0844]">MFC</h1>
-          </div>
-          <div className="text-sm text-gray-400">엑스로메다 MFC 이벤트</div>
-        </header>
-      )}
-
+    <div className="relative min-h-screen bg-black">
       {/* 메인 콘텐츠 */}
-      <div className="flex-1 w-full max-w-md mx-auto p-4">{renderScreen()}</div>
+      <div className="pb-20">
+        {renderScreen()}
+      </div>
 
-      {/* 하단 네비게이션 */}
-      {screen !== "purchase" && screen !== "shipping" && renderBottomNav()}
-    </main>
+      {/* 하단 탭 네비게이션 */}
+      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
+        <div className="grid grid-cols-5 h-16">
+          {/* 홈 */}
+          <button
+            onClick={() => setScreen("home")}
+            className={`flex flex-col items-center justify-center space-y-1 ${
+              getActiveTab() === "photos" && screen === "home" 
+                ? "text-[#FF4968]" 
+                : "text-gray-500"
+            }`}
+          >
+            <Home className="w-5 h-5" />
+            <span className="text-xs">홈</span>
+          </button>
+
+          {/* 투표하기 */}
+          <button
+            onClick={() => setScreen("voting")}
+            className={`flex flex-col items-center justify-center space-y-1 ${
+              getActiveTab() === "voting" 
+                ? "text-[#FF4968]" 
+                : "text-gray-500"
+            }`}
+          >
+            <Users className="w-5 h-5" />
+            <span className="text-xs">투표하기</span>
+          </button>
+
+          {/* 화보뽑기 */}
+          <button
+            onClick={() => setScreen("influencer-list")}
+            className={`flex flex-col items-center justify-center space-y-1 ${
+              getActiveTab() === "photos" && screen !== "home"
+                ? "text-[#FF4968]" 
+                : "text-gray-500"
+            }`}
+          >
+            <Grid3X3 className="w-5 h-5" />
+            <span className="text-xs">화보뽑기</span>
+          </button>
+
+          {/* 굿즈 */}
+          <button
+            onClick={() => setScreen("auction")}
+            className={`flex flex-col items-center justify-center space-y-1 ${
+              getActiveTab() === "auction" 
+                ? "text-[#FF4968]" 
+                : "text-gray-500"
+            }`}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            <span className="text-xs">굿즈</span>
+          </button>
+
+          {/* 마이페이지 */}
+          <button
+            onClick={() => setScreen("my-page")}
+            className={`flex flex-col items-center justify-center space-y-1 ${
+              getActiveTab() === "my" 
+                ? "text-[#FF4968]" 
+                : "text-gray-500"
+            }`}
+          >
+            <User className="w-5 h-5" />
+            <span className="text-xs">마이페이지</span>
+          </button>
+        </div>
+      </div>
+    </div>
   )
 }
