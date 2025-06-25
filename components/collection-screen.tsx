@@ -1,250 +1,100 @@
-"use client"
-
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ShoppingBag, ArrowLeft, Square, CheckSquare, ChevronDown, ChevronRight } from "lucide-react"
-import PhotocardMaker from "@/components/photocard-maker"
+import { ArrowLeft, Download, Grid3X3, Filter, Check, X } from "lucide-react"
+import PhotocardMaker from "./photocard-maker"
 
 interface CollectionScreenProps {
-  onBackToMain: () => void
-  onShowPurchase: () => void
-  onShowPhysicalOrder: (cards: any) => void
+  onBack?: () => void
+  onShowPhysicalOrder: (cards: any[]) => void
+  onBackToMain?: () => void
+  onShowPurchase?: () => void
 }
 
-export default function CollectionScreen({ onBackToMain, onShowPurchase, onShowPhysicalOrder }: CollectionScreenProps) {
-  const [selectMode, setSelectMode] = useState(false)
-  const [selectedCards, setSelectedCards] = useState<number[]>([])
+export default function CollectionScreen({ onBack, onShowPhysicalOrder, onBackToMain, onShowPurchase }: CollectionScreenProps) {
   const [gradeFilter, setGradeFilter] = useState<"all" | "S" | "A" | "C">("all")
   const [expandedInfluencer, setExpandedInfluencer] = useState<string | null>(null)
+  const [selectMode, setSelectMode] = useState(false)
+  const [selectedCards, setSelectedCards] = useState<number[]>([])
   const [selectedImage, setSelectedImage] = useState<any>(null)
   const [showDownloadConfirm, setShowDownloadConfirm] = useState(false)
   const [showPhotocardMaker, setShowPhotocardMaker] = useState(false)
 
-  // 더미 데이터 - 실제로는 상태 관리 라이브러리나 컨텍스트를 사용하여 관리
-  const influencers = [
-    {
-      id: "inf1",
-      name: "김민지",
-      totalCards: 12,
-      collectedCards: 5,
-    },
-    {
-      id: "inf2",
-      name: "이하은",
-      totalCards: 10,
-      collectedCards: 3,
-    },
-    {
-      id: "inf3",
-      name: "박서아",
-      totalCards: 8,
-      collectedCards: 2,
-    },
-    {
-      id: "inf4",
-      name: "정다현",
-      totalCards: 10,
-      collectedCards: 4,
-    },
-  ]
-
-  // 인플루언서별 카드 데이터
+  // 인플루언서별 카드 데이터 (김민지 전체 수집 완료로 설정)
   const cardsByInfluencer = {
     inf1: [
-      {
-        id: 1,
-        grade: "S",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
-        name: "김민지-S급화보",
-        collected: true,
+      // 김민지 - 모든 카드 수집 완료 (20/20)
+      ...Array.from({ length: 20 }, (_, i) => ({
+        id: i + 1,
+        grade: i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C",
+        image: `/placeholder.svg?height=300&width=200&text=김민지-${i + 1}`,
+        name: `김민지-${i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C"}급화보-${i + 1}`,
+        collected: true, // 모든 카드 수집 완료
         influencer: "김민지"
-      },
-      {
-        id: 2,
-        grade: "S",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
-        name: "김민지-S급화보",
-        collected: false,
-        influencer: "김민지"
-      },
-      {
-        id: 3,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "김민지-A급화보",
-        collected: true,
-        influencer: "김민지"
-      },
-      {
-        id: 4,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "김민지-A급화보",
-        collected: true,
-        influencer: "김민지"
-      },
-      {
-        id: 5,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "김민지-A급화보",
-        collected: false,
-        influencer: "김민지"
-      },
-      {
-        id: 6,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "김민지-C급화보",
-        collected: true,
-        influencer: "김민지"
-      },
-      {
-        id: 7,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "김민지-C급화보",
-        collected: true,
-        influencer: "김민지"
-      },
-      {
-        id: 8,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "김민지-C급화보",
-        collected: false,
-        influencer: "김민지"
-      },
+      }))
     ],
     inf2: [
-      {
-        id: 9,
-        grade: "S",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
-        name: "이하은-S급화보",
-        collected: false,
+      // 이하은 - 일부만 수집 (5/20)
+      ...Array.from({ length: 20 }, (_, i) => ({
+        id: i + 21,
+        grade: i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C",
+        image: `/placeholder.svg?height=300&width=200&text=이하은-${i + 1}`,
+        name: `이하은-${i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C"}급화보-${i + 1}`,
+        collected: i < 5, // 처음 5장만 수집
         influencer: "이하은"
-      },
-      {
-        id: 10,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "이하은-A급화보",
-        collected: true,
-        influencer: "이하은"
-      },
-      {
-        id: 11,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "이하은-A급화보",
-        collected: false,
-        influencer: "이하은"
-      },
-      {
-        id: 12,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "이하은-C급화보",
-        collected: true,
-        influencer: "이하은"
-      },
-      {
-        id: 13,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "이하은-C급화보",
-        collected: true,
-        influencer: "이하은"
-      },
+      }))
     ],
     inf3: [
-      {
-        id: 14,
-        grade: "S",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
-        name: "박서아-S급화보",
-        collected: false,
+      // 박서아 - 일부만 수집 (8/20)
+      ...Array.from({ length: 20 }, (_, i) => ({
+        id: i + 41,
+        grade: i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C",
+        image: `/placeholder.svg?height=300&width=200&text=박서아-${i + 1}`,
+        name: `박서아-${i % 7 === 0 ? "S" : i % 3 === 0 ? "A" : "C"}급화보-${i + 1}`,
+        collected: i < 8, // 처음 8장만 수집
         influencer: "박서아"
-      },
-      {
-        id: 15,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "박서아-A급화보",
-        collected: true,
-        influencer: "박서아"
-      },
-      {
-        id: 16,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "박서아-C급화보",
-        collected: true,
-        influencer: "박서아"
-      },
-    ],
-    inf4: [
-      {
-        id: 17,
-        grade: "S",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+S급",
-        name: "정다현-S급화보",
-        collected: false,
-        influencer: "정다현"
-      },
-      {
-        id: 18,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "정다현-A급화보",
-        collected: true,
-        influencer: "정다현"
-      },
-      {
-        id: 19,
-        grade: "A",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+A급",
-        name: "정다현-A급화보",
-        collected: true,
-        influencer: "정다현"
-      },
-      {
-        id: 20,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "정다현-C급화보",
-        collected: true,
-        influencer: "정다현"
-      },
-      {
-        id: 21,
-        grade: "C",
-        image: "/placeholder.svg?height=300&width=200&text=인물+이미지+C급",
-        name: "정다현-C급화보",
-        collected: true,
-        influencer: "정다현"
-      },
-    ],
+      }))
+    ]
   }
 
-  const toggleCardSelection = (id: number) => {
-    if (selectedCards.includes(id)) {
-      setSelectedCards(selectedCards.filter((cardId) => cardId !== id))
-    } else {
-      setSelectedCards([...selectedCards, id])
+  // 인플루언서 정보
+  const influencers = [
+    { 
+      id: "inf1", 
+      name: "김민지", 
+      image: "/placeholder.svg?height=300&width=200&text=김민지",
+      totalCards: 20,
+      collectedCards: 20 // 전체 수집 완료
+    },
+    { 
+      id: "inf2", 
+      name: "이하은", 
+      image: "/placeholder.svg?height=300&width=200&text=이하은",
+      totalCards: 20,
+      collectedCards: 5
+    },
+    { 
+      id: "inf3", 
+      name: "박서아", 
+      image: "/placeholder.svg?height=300&width=200&text=박서아",
+      totalCards: 20,
+      collectedCards: 8
     }
-  }
+  ]
 
   const toggleSelectMode = () => {
     setSelectMode(!selectMode)
-    if (selectMode) {
-      setSelectedCards([])
+    setSelectedCards([])
+  }
+
+  const toggleCardSelection = (cardId: number) => {
+    if (selectedCards.includes(cardId)) {
+      setSelectedCards(selectedCards.filter((id) => id !== cardId))
+    } else {
+      setSelectedCards([...selectedCards, cardId])
     }
   }
 
-  const selectAll = () => {
+  const selectAllCollected = () => {
     const allCollectedIds: number[] = []
     Object.values(cardsByInfluencer).forEach((cards) =>
       cards.forEach((card) => {
@@ -322,6 +172,25 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase, onShowP
     onShowPhysicalOrder(cards)
   }
 
+  // 인플루언서별 일괄 다운로드
+  const handleBulkDownload = (influencerId: string) => {
+    const cards = cardsByInfluencer[influencerId as keyof typeof cardsByInfluencer]
+    const collectedCards = cards.filter(card => card.collected)
+    
+    // 실제로는 zip 파일 다운로드 또는 개별 파일들 다운로드
+    alert(`${collectedCards[0].influencer}의 화보 ${collectedCards.length}장을 일괄 다운로드합니다.`)
+    
+    // 실제 다운로드 로직 구현
+    collectedCards.forEach((card, index) => {
+      setTimeout(() => {
+        const link = document.createElement('a')
+        link.download = `${card.influencer}-${card.name}.jpg`
+        link.href = card.image
+        link.click()
+      }, index * 100) // 100ms 간격으로 다운로드
+    })
+  }
+
   // 포토카드 메이커가 활성화된 경우
   if (showPhotocardMaker) {
     return (
@@ -351,46 +220,39 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase, onShowP
               }`}
               onClick={() => card.collected && (selectMode ? toggleCardSelection(card.id) : setSelectedImage(card))}
             >
-              <img src={card.image || "/placeholder.svg"} alt={card.name} className="w-full h-full object-cover" />
-
-              {/* 선택 체크박스 표시 */}
-              {card.collected && selectMode && (
-                <div className="absolute top-2 left-2 z-20">
-                  {selectedCards.includes(card.id) ? (
-                    <CheckSquare className="h-6 w-6 text-[#FF0844] bg-white/80 rounded" />
-                  ) : (
-                    <Square className="h-6 w-6 text-gray-400 bg-black/50 rounded" />
-                  )}
-                </div>
-              )}
-
-              {/* 선택 오버레이 */}
-              {card.collected && selectedCards.includes(card.id) && (
-                <div className="absolute inset-0 bg-[#FF0844]/20 border-2 border-[#FF0844] rounded-lg"></div>
-              )}
+              <img src={card.image} alt={card.name} className="w-full h-full object-cover" />
 
               {/* 등급 뱃지 */}
-              {card.grade === "S" && card.collected && (
-                <div className="absolute top-1 right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">S</span>
-                </div>
-              )}
-              {card.grade === "A" && card.collected && (
-                <div className="absolute top-1 right-1 w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">A</span>
-                </div>
-              )}
-              {card.grade === "C" && card.collected && (
-                <div className="absolute top-1 right-1 w-6 h-6 bg-gray-700 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-white">C</span>
+              <div
+                className={`absolute top-1 left-1 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                  card.grade === "S"
+                    ? "bg-yellow-500"
+                    : card.grade === "A"
+                      ? "bg-gray-400"
+                      : "bg-gray-700"
+                }`}
+              >
+                <span className="text-white">{card.grade}</span>
+              </div>
+
+              {/* 선택 모드일 때 체크박스 */}
+              {selectMode && card.collected && (
+                <div className="absolute top-1 right-1">
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 border-white flex items-center justify-center ${
+                      selectedCards.includes(card.id) ? "bg-[#FF0844]" : "bg-black/50"
+                    }`}
+                  >
+                    {selectedCards.includes(card.id) && <Check className="w-4 h-4 text-white" />}
+                  </div>
                 </div>
               )}
 
-              {/* 미수집 표시 */}
+              {/* 미수집 카드 표시 */}
               {!card.collected && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 bg-black/70 rounded-full flex items-center justify-center">
-                    <span className="text-xl">?</span>
+                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-full border-2 border-gray-400 flex items-center justify-center">
+                    <span className="text-gray-400">?</span>
                   </div>
                 </div>
               )}
@@ -403,184 +265,218 @@ export default function CollectionScreen({ onBackToMain, onShowPurchase, onShowP
 
   return (
     <div className="flex flex-col h-full bg-black text-white">
-      <div className="sticky top-0 z-10 bg-black pt-4 pb-2">
-        <div className="flex justify-between items-center mb-4">
+      {/* 헤더 */}
+      <div className="sticky top-0 z-10 bg-black p-4">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <Button variant="ghost" size="icon" onClick={onBackToMain} className="mr-2 -ml-3">
+            <Button variant="ghost" size="icon" onClick={onBack || onBackToMain} className="mr-2 -ml-3">
               <ArrowLeft className="h-5 w-5 text-white" />
             </Button>
             <h2 className="text-xl font-bold">내 컬렉션 상세</h2>
           </div>
-          <div className="text-sm text-gray-400">
-            <span className="font-bold">{totalStats.collected}</span>/{totalStats.total} 수집
-          </div>
-        </div>
-
-        {/* 선택 모드 컨트롤 */}
-        <div className="flex justify-between items-center mb-4">
           <Button
-            variant={selectMode ? "default" : "outline"}
-            size="sm"
+            variant="ghost"
+            size="icon"
             onClick={toggleSelectMode}
-            className={selectMode ? "bg-[#FF0844]" : "border-gray-600 text-gray-400"}
+            className={selectMode ? "bg-[#FF0844] text-white" : "text-gray-400"}
           >
-            {selectMode ? "제작 취소" : "포토카드 제작"}
+            <Grid3X3 className="h-5 w-5" />
           </Button>
-
-          {selectMode && (
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={selectAll} className="border-gray-600 text-gray-400">
-                전체 선택
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedCards([])}
-                className="border-gray-600 text-gray-400"
-              >
-                선택 해제
-              </Button>
-            </div>
-          )}
         </div>
 
         {/* 등급 필터 */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center">
-            <Tabs
-              defaultValue="all"
-              className="w-full"
-              value={gradeFilter}
-              onValueChange={(value) => setGradeFilter(value as "all" | "S" | "A" | "C")}
+        <div className="flex gap-2 mb-4">
+          {["all", "S", "A", "C"].map((grade) => (
+            <Button
+              key={grade}
+              variant={gradeFilter === grade ? "default" : "outline"}
+              size="sm"
+              onClick={() => setGradeFilter(grade as "all" | "S" | "A" | "C")}
+              className={
+                gradeFilter === grade
+                  ? "bg-[#FF0844] text-white border-[#FF0844]"
+                  : "border-gray-600 text-gray-300 hover:bg-gray-800"
+              }
             >
-              <TabsList className="bg-gray-900 w-full">
-                <TabsTrigger value="all" className="flex-1 data-[state=active]:bg-[#FF0844]">
-                  전체
-                </TabsTrigger>
-                <TabsTrigger value="S" className="flex-1 data-[state=active]:bg-[#FF0844]">
-                  S급
-                  <span className="ml-1 text-xs">
-                    ({totalStats.byGrade.S.collected}/{totalStats.byGrade.S.total})
+              {grade === "all" ? "전체" : `${grade}급`}
+            </Button>
+          ))}
+        </div>
+
+        {/* 선택 모드 컨트롤 */}
+        {selectMode && (
+          <div className="flex gap-2 mb-4">
+            <Button variant="outline" size="sm" onClick={selectAllCollected} className="border-gray-600 text-gray-300">
+              전체 선택
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setSelectedCards([])} className="border-gray-600 text-gray-300">
+              선택 해제
+            </Button>
+            {selectedCards.length > 0 && (
+              <Button
+                size="sm"
+                onClick={handleMakePhotocard}
+                className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
+              >
+                포토카드 제작 ({selectedCards.length})
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* 컬렉션 통계 */}
+      <div className="px-4 pb-4">
+        <div className="bg-gray-900 rounded-lg p-4 mb-4">
+          <h3 className="font-bold mb-2">전체 수집 현황</h3>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-400">전체 진행률:</span>
+              <span className="ml-2 font-bold text-[#FF0844]">
+                {totalStats.collected}/{totalStats.total} ({Math.round((totalStats.collected / totalStats.total) * 100)}%)
+              </span>
+            </div>
+            <div className="space-y-1">
+              {Object.entries(totalStats.byGrade).map(([grade, stats]) => (
+                <div key={grade}>
+                  <span className="text-gray-400">{grade}급:</span>
+                  <span className="ml-2 font-bold">
+                    {stats.collected}/{stats.total}
                   </span>
-                </TabsTrigger>
-                <TabsTrigger value="A" className="flex-1 data-[state=active]:bg-[#FF0844]">
-                  A급
-                  <span className="ml-1 text-xs">
-                    ({totalStats.byGrade.A.collected}/{totalStats.byGrade.A.total})
-                  </span>
-                </TabsTrigger>
-                <TabsTrigger value="C" className="flex-1 data-[state=active]:bg-[#FF0844]">
-                  C급
-                  <span className="ml-1 text-xs">
-                    ({totalStats.byGrade.C.collected}/{totalStats.byGrade.C.total})
-                  </span>
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 인플루언서별 화보 목록 */}
-      <div className="flex-1 overflow-y-auto">
+      {/* 인플루언서별 컬렉션 */}
+      <div className="flex-1 px-4 pb-4 overflow-auto">
         {influencers.map((influencer) => {
-          const cards = cardsByInfluencer[influencer.id as keyof typeof cardsByInfluencer] || []
-          const filteredCards = gradeFilter === "all" ? cards : cards.filter((card) => card.grade === gradeFilter)
-
-          if (filteredCards.length === 0) return null
-
-          const collectedCount = filteredCards.filter((card) => card.collected).length
+          const cards = cardsByInfluencer[influencer.id as keyof typeof cardsByInfluencer]
+          const isFullyCollected = influencer.collectedCards === influencer.totalCards
 
           return (
-            <div key={influencer.id} className="mb-4 bg-gray-900 rounded-lg overflow-hidden">
+            <div key={influencer.id} className="mb-4">
               <div
-                className="p-3 flex justify-between items-center cursor-pointer border-b border-gray-800"
+                className="bg-gray-900 rounded-lg p-4 cursor-pointer hover:bg-gray-800 transition-colors"
                 onClick={() => toggleInfluencer(influencer.id)}
               >
-                <div className="flex items-center">
-                  <div className="font-bold">{influencer.name}</div>
-                  <div className="ml-2 text-sm text-gray-400">
-                    {collectedCount}/{filteredCards.length} 수집
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={influencer.image}
+                      alt={influencer.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="font-bold">{influencer.name}</h3>
+                      <p className="text-sm text-gray-400">
+                        {influencer.collectedCards}/{influencer.totalCards} 수집
+                        {isFullyCollected && (
+                          <span className="ml-2 text-green-500 text-xs">✓ 완성</span>
+                        )}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-center">
-                  {expandedInfluencer === influencer.id ? (
-                    <ChevronDown className="h-5 w-5 text-gray-400" />
-                  ) : (
-                    <ChevronRight className="h-5 w-5 text-gray-400" />
-                  )}
+                  
+                  <div className="flex items-center gap-2">
+                    {/* 전체 수집 완료한 인플루언서만 일괄 다운로드 버튼 표시 */}
+                    {isFullyCollected && (
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleBulkDownload(influencer.id)
+                        }}
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                      >
+                        <Download className="w-4 h-4 mr-1" />
+                        일괄 다운로드
+                      </Button>
+                    )}
+                    
+                    <div className="text-right">
+                      <div className="text-sm font-bold">
+                        {Math.round((influencer.collectedCards / influencer.totalCards) * 100)}%
+                      </div>
+                      <div className="w-16 h-2 bg-gray-700 rounded-full overflow-hidden">
+                        <div
+                          className={`h-full transition-all duration-300 ${
+                            isFullyCollected ? 'bg-green-500' : 'bg-[#FF0844]'
+                          }`}
+                          style={{
+                            width: `${(influencer.collectedCards / influencer.totalCards) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {expandedInfluencer === influencer.id && renderCardGrid(cards)}
+              {expandedInfluencer === influencer.id && (
+                <div className="mt-2 bg-gray-800 rounded-lg p-4">
+                  {renderCardGrid(cards)}
+                </div>
+              )}
             </div>
           )
         })}
       </div>
 
-      {/* 선택된 카드가 있을 때 하단 제작 버튼 */}
-      {selectedCards.length > 0 && (
-        <div className="fixed bottom-16 left-0 right-0 p-4 bg-black border-t border-gray-800">
-          <Button onClick={handleMakePhotocard} className="w-full py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">
-            <ShoppingBag className="mr-2 h-4 w-4" />
-            선택한 {selectedCards.length}개 포토카드 만들기
-          </Button>
-        </div>
-      )}
-
-      {/* 이미지 상세보기 모달 */}
+      {/* 상세 이미지 모달 */}
       {selectedImage && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4">
-          <div className="fixed top-0 left-0 right-0 bg-black/80 p-4 flex items-center z-50">
-            <Button variant="ghost" size="icon" onClick={() => setSelectedImage(null)} className="mr-2">
-              <ArrowLeft className="h-5 w-5 text-white" />
-            </Button>
-            <h2 className="text-lg font-bold">{selectedImage.name}</h2>
-          </div>
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 rounded-lg max-w-sm w-full">
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setSelectedImage(null)}
+                className="absolute top-2 right-2 z-10 bg-black/50 text-white hover:bg-black/70"
+              >
+                <X className="h-5 w-5" />
+              </Button>
 
-          <div className="relative w-full max-w-sm mt-16">
-            <div className="bg-gray-900 rounded-lg overflow-hidden">
-              <div className="relative aspect-[2/3] w-full">
-                <img
-                  src={selectedImage.image || "/placeholder.svg"}
-                  alt={selectedImage.name}
-                  className="w-full h-full object-cover"
-                />
-                <div
-                  className={`absolute top-2 right-2 z-10 w-8 h-8 rounded-full flex items-center justify-center ${
-                    selectedImage.grade === "S"
-                      ? "bg-yellow-500"
-                      : selectedImage.grade === "A"
-                        ? "bg-gray-400"
-                        : "bg-gray-700"
-                  }`}
-                >
-                  <span className="font-bold text-white">{selectedImage.grade}</span>
-                </div>
+              <div className="aspect-[2/3] rounded-t-lg overflow-hidden">
+                <img src={selectedImage.image} alt={selectedImage.name} className="w-full h-full object-cover" />
               </div>
 
-              <div className="p-4">
-                <h3 className="text-lg font-bold mb-2">{selectedImage.name}</h3>
+              <div
+                className={`absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                  selectedImage.grade === "S"
+                    ? "bg-yellow-500"
+                    : selectedImage.grade === "A"
+                      ? "bg-gray-400"
+                      : "bg-gray-700"
+                }`}
+              >
+                <span className="font-bold text-white">{selectedImage.grade}</span>
+              </div>
+            </div>
 
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                  <Button 
-                    onClick={() => {
-                      setSelectedCards([selectedImage.id])
-                      setSelectedImage(null)
-                      setShowPhotocardMaker(true)
-                    }} 
-                    className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
-                  >
-                    포토카드 제작
-                  </Button>
-                  <Button
-                    onClick={() => setShowDownloadConfirm(true)}
-                    variant="outline"
-                    className="border-gray-600 text-black bg-white hover:bg-gray-100"
-                  >
-                    다운로드
-                  </Button>
-                </div>
+            <div className="p-4">
+              <h3 className="text-lg font-bold mb-2">{selectedImage.name}</h3>
+
+              <div className="grid grid-cols-2 gap-2 mt-4">
+                <Button 
+                  onClick={() => {
+                    setSelectedCards([selectedImage.id])
+                    setSelectedImage(null)
+                    setShowPhotocardMaker(true)
+                  }} 
+                  className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
+                >
+                  포토카드 제작
+                </Button>
+                <Button
+                  onClick={() => setShowDownloadConfirm(true)}
+                  variant="outline"
+                  className="border-gray-600 text-black bg-white hover:bg-gray-100"
+                >
+                  다운로드
+                </Button>
               </div>
             </div>
           </div>
