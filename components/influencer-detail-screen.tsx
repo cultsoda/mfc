@@ -250,8 +250,8 @@ export default function InfluencerDetailScreen({
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* 컨테이너를 반응형으로 제한 */}
-      <div className="mx-auto max-w-sm md:max-w-2xl lg:max-w-4xl">
+      {/* 컨테이너를 반응형으로 제한 - 최대 너비 설정 */}
+      <div className="mx-auto max-w-sm lg:max-w-6xl xl:max-w-7xl">
         
         {/* 헤더 */}
         <div className="flex items-center justify-between p-4 bg-black sticky top-0 z-30">
@@ -263,12 +263,12 @@ export default function InfluencerDetailScreen({
         </div>
 
         {/* PC/태블릿용 2컬럼 레이아웃, 모바일용 1컬럼 */}
-        <div className="lg:grid lg:grid-cols-5 lg:gap-6 lg:p-6">
+        <div className="lg:grid lg:grid-cols-5 lg:gap-8 lg:p-6 lg:max-w-5xl lg:mx-auto">
           
           {/* 왼쪽 영역 - 인플루언서 정보 (모바일에서는 상단) */}
           <div className="lg:col-span-2">
             {/* 상단 이미지 영역 */}
-            <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-lg">
+            <div className="relative h-64 lg:h-80 xl:h-96 overflow-hidden rounded-lg">
               <div className="absolute inset-0 z-10">
                 {Array.from({ length: 20 }).map((_, i) => (
                   <div
@@ -291,7 +291,7 @@ export default function InfluencerDetailScreen({
               />
 
               <div className="absolute bottom-0 left-0 right-0 p-4 z-20 text-white bg-gradient-to-t from-black/70 to-transparent">
-                <h1 className="text-xl md:text-2xl font-bold text-[#FF0844]">{influencer.name}</h1>
+                <h1 className="text-xl lg:text-2xl font-bold text-[#FF0844]">{influencer.name}</h1>
                 <p className="text-sm text-gray-300">화보 뽑기</p>
               </div>
             </div>
@@ -304,7 +304,7 @@ export default function InfluencerDetailScreen({
                   <div className="text-sm text-gray-400">보유 뽑기권</div>
                   <div className="font-bold text-lg">{points}장</div>
                 </div>
-                <Button onClick={onShowPurchase} className="py-3 px-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white">
+                <Button onClick={onShowPurchase} className="py-3 px-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white whitespace-nowrap">
                   뽑기권 구매
                 </Button>
               </div>

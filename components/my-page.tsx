@@ -138,8 +138,8 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* 반응형 컨테이너 */}
-      <div className="mx-auto max-w-sm md:max-w-2xl lg:max-w-4xl">
+      {/* 최대 너비 제한만 추가 */}
+      <div className="mx-auto max-w-sm lg:max-w-6xl">
         <div className="flex flex-col h-full bg-black text-white">
           <div className="sticky top-0 z-10 bg-black pt-4 pb-2 px-4">
             <div className="flex justify-between items-center mb-4">
@@ -234,123 +234,71 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
               </TabsContent>
 
               <TabsContent value="my-collection" className="mt-4">
-                {/* PC/태블릿용 2컬럼, 모바일용 1컬럼 레이아웃 */}
-                <div className="lg:grid lg:grid-cols-3 lg:gap-6">
-                  
-                  {/* 왼쪽 영역 - 통계 정보 */}
-                  <div className="lg:col-span-1">
-                    <div className="bg-gray-900 rounded-lg p-4 mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="text-sm">컬렉션 현황</div>
-                        <div className="text-sm font-bold">
-                          {totalStats.collected}/{totalStats.total} 수집
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-3 gap-2 mb-2">
-                        <div className="bg-gray-800 p-2 rounded-lg">
-                          <div className="text-xs text-gray-400">S급</div>
-                          <div className="text-sm font-bold">
-                            {totalStats.byGrade.S.collected}/{totalStats.byGrade.S.total}
-                          </div>
-                        </div>
-                        <div className="bg-gray-800 p-2 rounded-lg">
-                          <div className="text-xs text-gray-400">A급</div>
-                          <div className="text-sm font-bold">
-                            {totalStats.byGrade.A.collected}/{totalStats.byGrade.A.total}
-                          </div>
-                        </div>
-                        <div className="bg-gray-800 p-2 rounded-lg">
-                          <div className="text-xs text-gray-400">C급</div>
-                          <div className="text-sm font-bold">
-                            {totalStats.byGrade.C.collected}/{totalStats.byGrade.C.total}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {/* 진행률 바 */}
-                      <div className="mt-3">
-                        <div className="flex justify-between text-xs text-gray-400 mb-1">
-                          <span>전체 진행률</span>
-                          <span>{Math.round((totalStats.collected / totalStats.total) * 100)}%</span>
-                        </div>
-                        <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-[#FF0844] transition-all duration-300"
-                            style={{
-                              width: `${(totalStats.collected / totalStats.total) * 100}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* PC/태블릿에서는 여기에 액션 버튼들 */}
-                    <div className="hidden lg:block space-y-3">
-                      <Button className="w-full py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" onClick={onShowCollection}>
-                        <Download className="mr-2 h-4 w-4" />
-                        포토카드 제작 & 다운로드
-                      </Button>
-                      <Button className="w-full py-4 bg-gray-800 hover:bg-gray-700 text-white" onClick={onGoToPhotos}>
-                        <Grid3X3 className="mr-2 h-4 w-4" />
-                        화보 뽑기
-                      </Button>
+                <div className="bg-gray-900 rounded-lg p-4 mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="text-sm">컬렉션 현황</div>
+                    <div className="text-sm font-bold">
+                      {totalStats.collected}/{totalStats.total} 수집
                     </div>
                   </div>
-
-                  {/* 오른쪽 영역 - 인플루언서 목록 */}
-                  <div className="lg:col-span-2">
-                    <div className="grid grid-cols-2 gap-3 mb-4">
-                      {influencers.map((influencer) => {
-                        const isFullyCollected = influencer.collectedCards === influencer.totalCards
-                        const progressPercent = Math.round((influencer.collectedCards / influencer.totalCards) * 100)
-
-                        return (
-                          <div key={influencer.id} className="bg-gray-900 rounded-lg overflow-hidden">
-                            <div className="p-3 border-b border-gray-800">
-                              <div className="flex justify-between items-start mb-2">
-                                <div className="font-bold">{influencer.name}</div>
-                                {isFullyCollected && (
-                                  <span className="text-green-500 text-xs bg-green-500/20 px-2 py-0.5 rounded-full">
-                                    ✓ 완성
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-xs text-gray-400 mb-2">
-                                {influencer.collectedCards}/{influencer.totalCards} 수집 ({progressPercent}%)
-                              </div>
-                              
-                              {/* 개별 진행률 바 */}
-                              <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full transition-all duration-300 ${
-                                    isFullyCollected ? 'bg-green-500' : 'bg-[#FF0844]'
-                                  }`}
-                                  style={{
-                                    width: `${progressPercent}%`,
-                                  }}
-                                />
-                              </div>
-                            </div>
-                            <div className="p-3 grid grid-cols-3 gap-1">
-                              {Array.from({ length: 3 }).map((_, i) => (
-                                <div key={i} className="aspect-[2/3] rounded-lg overflow-hidden">
-                                  <img
-                                    src="/placeholder.svg?height=100&width=70&text=화보"
-                                    alt="화보 미리보기"
-                                    className="w-full h-full object-cover"
-                                  />
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )
-                      })}
+                  <div className="grid grid-cols-3 gap-2 mb-2">
+                    <div className="bg-gray-800 p-2 rounded-lg">
+                      <div className="text-xs text-gray-400">S급</div>
+                      <div className="text-sm font-bold">
+                        {totalStats.byGrade.S.collected}/{totalStats.byGrade.S.total}
+                      </div>
+                    </div>
+                    <div className="bg-gray-800 p-2 rounded-lg">
+                      <div className="text-xs text-gray-400">A급</div>
+                      <div className="text-sm font-bold">
+                        {totalStats.byGrade.A.collected}/{totalStats.byGrade.A.total}
+                      </div>
+                    </div>
+                    <div className="bg-gray-800 p-2 rounded-lg">
+                      <div className="text-xs text-gray-400">C급</div>
+                      <div className="text-sm font-bold">
+                        {totalStats.byGrade.C.collected}/{totalStats.byGrade.C.total}
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 모바일에서만 보이는 하단 액션 버튼들 */}
-                <div className="lg:hidden grid grid-cols-2 gap-3 px-4 pb-4">
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {influencers.map((influencer) => {
+                    const isFullyCollected = influencer.collectedCards === influencer.totalCards
+
+                    return (
+                      <div key={influencer.id} className="bg-gray-900 rounded-lg overflow-hidden">
+                        <div className="p-3 border-b border-gray-800">
+                          <div className="flex justify-between items-start mb-1">
+                            <div className="font-bold">{influencer.name}</div>
+                            {isFullyCollected && (
+                              <span className="text-green-500 text-xs bg-green-500/20 px-1.5 py-0.5 rounded-full">
+                                ✓ 완성
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {influencer.collectedCards}/{influencer.totalCards} 수집
+                          </div>
+                        </div>
+                        <div className="p-3 grid grid-cols-3 gap-1">
+                          {Array.from({ length: 3 }).map((_, i) => (
+                            <div key={i} className="aspect-[2/3] rounded-lg overflow-hidden">
+                              <img
+                                src="/placeholder.svg?height=100&width=70&text=화보"
+                                alt="화보 미리보기"
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
                   <Button className="py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" onClick={onShowCollection}>
                     <Download className="mr-2 h-4 w-4" />
                     포토카드 제작 & 다운로드
