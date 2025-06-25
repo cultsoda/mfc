@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ChevronRight, ArrowLeft, X, Grid3X3, Eye } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"; // Checkbox 컴포넌트 import
+import { Download } from "lucide-react"; // Download 아이콘 import
 
 interface InfluencerDetailScreenProps {
   influencerId: string | null
@@ -12,19 +14,53 @@ interface InfluencerDetailScreenProps {
 }
 
 // 모달 컴포넌트들
-const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage }: { 
+const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage, influencer }: { 
   isOpen: boolean
   onClose: () => void
   myCards: any[]
   onGoToMyPage: () => void
+  influencer: { totalCount: number } // influencer 정보 prop 추가
 }) => {
   if (!isOpen) return null
 
+  // 선택된 카드를 관리할 상태 추가
+  const [selectedCardIds, setSelectedCardIds] = useState<number[]>([]);
+
+  const handleCardSelect = (cardId: number) => {
+    setSelectedCardIds(prev =>
+      prev.includes(cardId)
+        ? prev.filter(id => id !== cardId)
+        : [...prev, cardId]
+    );
+  };
+
+  const isAllCollected = myCards.length === influencer.totalCount;
+  const isAnyCardSelected = selectedCardIds.length > 0;
+
+  const handleDownload = () => {
+    if (isAllCollected) {
+      // ZIP 파일 다운로드 로직 (시뮬레이션)
+      alert('일괄 다운로드(ZIP)가 시작됩니다.');
+      console.log('Downloading ZIP file for influencer...');
+    } else {
+      // 선택한 파일 개별 다운로드 로직 (시뮬레이션)
+      alert(`${selectedCardIds.length}개의 화보를 개별 다운로드합니다.`);
+      console.log('Downloading selected files:', selectedCardIds);
+    }
+  };
+  
+  const handleCreatePhotocard = () => {
+      // 선택된 카드 정보를 가지고 포토카드 제작 페이지로 이동하거나,
+      // 상태를 업데이트하여 다음 동작을 처리합니다.
+      console.log("만들 포토카드 ID:", selectedCardIds);
+      onGoToMyPage(); // 기존 로직은 유지
+  }
+
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] overflow-hidden">
+      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] flex flex-col"> {/* flex, flex-col 추가 */}
         {/* 모달 헤더 */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-700">
+        <div className="flex justify-between items-center p-4 border-b border-gray-700 flex-shrink-0"> {/* flex-shrink-0 추가 */}
           <h2 className="text-lg font-bold text-white">내가 뽑은 화보</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <X className="w-6 h-6" />
@@ -32,15 +68,22 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage }: {
         </div>
         
         {/* 모달 내용 */}
-        <div className="p-4 overflow-y-auto max-h-[60vh]">
+        <div className="p-4 overflow-y-auto"> {/* overflow-y-auto 추가 */}
           {myCards.length > 0 ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
               {myCards.map((card, index) => (
-                <div key={index} className="relative">
-                  <div className="w-full aspect-[3/4] rounded-lg overflow-hidden border-2 border-pink-500">
+                <div key={index} className="relative cursor-pointer" onClick={() => handleCardSelect(card.number)}>
+                  <div className="absolute top-1 left-1 z-10">
+                    <Checkbox
+                      id={`card-${card.number}`}
+                      checked={selectedCardIds.includes(card.number)}
+                      className="bg-white/80"
+                    />
+                  </div>
+                  <div className={`w-full aspect-[3/4] rounded-lg overflow-hidden border-2 ${selectedCardIds.includes(card.number) ? 'border-pink-500' : 'border-transparent'}`}>
                     <img
                       src={card.image || "/placeholder.svg"}
-                      alt={`화보 ${index + 1}`}
+                      alt={`화보 ${card.number}`}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -58,21 +101,37 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage }: {
             </div>
           )}
           
-          {/* 포토카드 만들기 버튼 */}
-          {myCards.length > 0 && (
-            <div className="border-t border-gray-700 pt-4">
+          {/* 하단 버튼 영역 */}
+          <div className="border-t border-gray-700 pt-4 mt-auto"> {/* mt-auto 추가 */}
+            {isAllCollected ? (
               <Button
-                onClick={() => {
-                  onClose()
-                  onGoToMyPage()
-                }}
-                className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
+                onClick={handleDownload}
+                className="w-full py-3 bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2"
               >
-                <Grid3X3 className="w-4 h-4" />
-                포토카드 만들기
+                <Download className="w-4 h-4" />
+                일괄 다운로드 (ZIP)
               </Button>
-            </div>
-          )}
+            ) : (
+              <div className="grid grid-cols-2 gap-3">
+                <Button
+                  onClick={handleDownload}
+                  disabled={!isAnyCardSelected}
+                  className="py-3 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2 disabled:bg-gray-700 disabled:text-gray-400"
+                >
+                  <Download className="w-4 h-4" />
+                  다운로드 ({selectedCardIds.length})
+                </Button>
+                <Button
+                  onClick={handleCreatePhotocard}
+                  disabled={!isAnyCardSelected}
+                  className="py-3 bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2 disabled:bg-gray-700 disabled:text-gray-400"
+                >
+                  <Grid3X3 className="w-4 h-4" />
+                  포토카드 만들기 ({selectedCardIds.length})
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -473,6 +532,7 @@ export default function InfluencerDetailScreen({
         onClose={() => setShowMyCollection(false)}
         myCards={myCards}
         onGoToMyPage={() => onGoToMyPage && onGoToMyPage()}
+        influencer={{ totalCount: 20 }} // 예시로 총 개수 20 전달
       />
       
       <MissionProgressModal
