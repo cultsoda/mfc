@@ -263,10 +263,11 @@ export default function InfluencerDetailScreen({
         </div>
 
         {/* PC/태블릿용 2컬럼 레이아웃, 모바일용 1컬럼 */}
-        <div className="lg:flex lg:gap-8 lg:p-6 lg:max-w-5xl lg:mx-auto">
-          
-          {/* 왼쪽 영역 - 인플루언서 정보 (모바일에서는 상단) */}
-          <div className="lg:w-[40%] lg:max-w-[400px] lg:flex-shrink-0">
+        <div className="lg:flex lg:gap-8 lg:p-6">
+  
+        {/* 왼쪽 영역 - 인플루언서 정보 (고정 너비) */}
+        <div className="lg:w-96 lg:flex-shrink-0">
+
             {/* 상단 이미지 영역 */}
             <div className="relative h-64 lg:h-80 xl:h-96 overflow-hidden rounded-lg">
               <div className="absolute inset-0 z-10">
@@ -345,8 +346,8 @@ export default function InfluencerDetailScreen({
             </div>
           </div>
 
-          {/* 오른쪽 영역 - 화보 미리보기 및 미션 정보 (모바일에서는 하단) */}
-          <div className="lg:flex-1 p-4 lg:p-0">
+          {/* 오른쪽 영역 - 화보 미리보기 및 미션 정보 (남은 공간 모두 차지) */}
+          <div className="lg:flex-1 lg:min-w-0 p-4 lg:p-0">
 
             
             {/* 모바일에서만 보이는 뽑기권 정보 */}

@@ -314,7 +314,7 @@ export default function MainApp() {
   return (
     <div className="relative min-h-screen bg-black">
       {/* 메인 콘텐츠 - 모바일 우선, PC에서는 최대 너비 제한 */}
-      <div className="pb-20 max-w-md mx-auto min-h-screen bg-black">
+      <div className="pb-20 max-w-md lg:max-w-5xl mx-auto min-h-screen bg-black">
         {renderScreen()}
       </div>
 
