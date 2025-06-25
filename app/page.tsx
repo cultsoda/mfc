@@ -313,13 +313,13 @@ export default function MainApp() {
 
   return (
     <div className="relative min-h-screen bg-black">
-      {/* 메인 콘텐츠 */}
-      <div className="pb-20">
+      {/* 메인 콘텐츠 - 모바일 우선, PC에서는 최대 너비 제한 */}
+      <div className="pb-20 max-w-md mx-auto min-h-screen bg-black">
         {renderScreen()}
       </div>
 
-      {/* 하단 탭 네비게이션 */}
-      <div className="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 z-50">
+      {/* 하단 탭 네비게이션 - PC에서도 모바일 너비로 제한 */}
+      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md bg-black border-t border-gray-800 z-50">
         <div className="grid grid-cols-5 h-16">
           {/* 홈 */}
           <button
