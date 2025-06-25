@@ -235,10 +235,10 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
 
               <TabsContent value="my-collection" className="mt-4">
                 {/* PC/태블릿용 2컬럼, 모바일용 1컬럼 레이아웃 */}
-                <div className="md:grid md:grid-cols-3 md:gap-6">
+                <div className="lg:grid lg:grid-cols-3 lg:gap-6">
                   
                   {/* 왼쪽 영역 - 통계 정보 */}
-                  <div className="md:col-span-1">
+                  <div className="lg:col-span-1">
                     <div className="bg-gray-900 rounded-lg p-4 mb-4">
                       <div className="flex justify-between items-center mb-2">
                         <div className="text-sm">컬렉션 현황</div>
@@ -285,7 +285,7 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
                     </div>
 
                     {/* PC/태블릿에서는 여기에 액션 버튼들 */}
-                    <div className="hidden md:block space-y-3">
+                    <div className="hidden lg:block space-y-3">
                       <Button className="w-full py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" onClick={onShowCollection}>
                         <Download className="mr-2 h-4 w-4" />
                         포토카드 제작 & 다운로드
@@ -298,8 +298,8 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
                   </div>
 
                   {/* 오른쪽 영역 - 인플루언서 목록 */}
-                  <div className="md:col-span-2">
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 mb-4">
+                  <div className="lg:col-span-2">
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                       {influencers.map((influencer) => {
                         const isFullyCollected = influencer.collectedCards === influencer.totalCards
                         const progressPercent = Math.round((influencer.collectedCards / influencer.totalCards) * 100)
@@ -350,7 +350,7 @@ export default function MyPage({ activeTab, onTabChange, onBackToMain, onShowCol
                 </div>
 
                 {/* 모바일에서만 보이는 하단 액션 버튼들 */}
-                <div className="md:hidden grid grid-cols-2 gap-3 px-4 pb-4">
+                <div className="lg:hidden grid grid-cols-2 gap-3 px-4 pb-4">
                   <Button className="py-4 bg-[#FF0844] hover:bg-[#FF0844]/90 text-white" onClick={onShowCollection}>
                     <Download className="mr-2 h-4 w-4" />
                     포토카드 제작 & 다운로드

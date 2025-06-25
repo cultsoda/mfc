@@ -263,10 +263,10 @@ export default function InfluencerDetailScreen({
         </div>
 
         {/* PC/태블릿용 2컬럼 레이아웃, 모바일용 1컬럼 */}
-        <div className="md:grid md:grid-cols-5 md:gap-6 md:p-6">
+        <div className="lg:grid lg:grid-cols-5 lg:gap-6 lg:p-6">
           
           {/* 왼쪽 영역 - 인플루언서 정보 (모바일에서는 상단) */}
-          <div className="md:col-span-2">
+          <div className="lg:col-span-2">
             {/* 상단 이미지 영역 */}
             <div className="relative h-64 md:h-80 lg:h-96 overflow-hidden rounded-lg">
               <div className="absolute inset-0 z-10">
@@ -297,7 +297,7 @@ export default function InfluencerDetailScreen({
             </div>
 
             {/* PC/태블릿에서는 여기에 뽑기 버튼들 위치 */}
-            <div className="hidden md:block mt-6 space-y-4">
+            <div className="hidden lg:block mt-6 space-y-4">
               {/* 보유 뽑기권 표시 및 구매 버튼 */}
               <div className="flex items-center justify-between">
                 <div className="bg-gray-900 rounded-lg p-3 flex-1 mr-2">
@@ -346,10 +346,10 @@ export default function InfluencerDetailScreen({
           </div>
 
           {/* 오른쪽 영역 - 화보 미리보기 및 미션 정보 (모바일에서는 하단) */}
-          <div className="md:col-span-3 p-4 md:p-0">
+          <div className="lg:col-span-3 p-4 lg:p-0">
             
             {/* 모바일에서만 보이는 뽑기권 정보 */}
-            <div className="md:hidden mb-4">
+            <div className="lg:hidden mb-4">
               <div className="flex items-center justify-between mb-4">
                 <div className="bg-gray-900 rounded-lg p-3 flex-1 mr-2">
                   <div className="text-sm text-gray-400">보유 뽑기권</div>
@@ -427,7 +427,7 @@ export default function InfluencerDetailScreen({
         </div>
 
         {/* 모바일에서만 보이는 하단 고정 버튼 영역 */}
-        <div className="md:hidden sticky bottom-0 p-4 bg-black border-t border-gray-800">
+        <div className="lg:hidden sticky bottom-0 p-4 bg-black border-t border-gray-800">
           {/* 공유 버튼 */}
           <div className="flex justify-center mb-3">
             <button className="flex items-center gap-2 text-gray-400 hover:text-white">
