@@ -118,9 +118,10 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] overflow-hidden">
+      {/* ▼ 수정: flex, flex-col 추가 */}
+      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] flex flex-col">
         {/* 모달 헤더 */}
-        <div className="bg-red-600 p-4">
+        <div className="bg-red-600 p-4 flex-shrink-0"> {/* ▼ 수정: flex-shrink-0 추가 */}
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold text-white">미션 진행</h2>
             <button onClick={onClose} className="text-white/80 hover:text-white">
@@ -129,8 +130,8 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
           </div>
         </div>
         
-        {/* 미션 진행 상황 */}
-        <div className="p-4">
+        {/* 미션 진행 상황 - 스크롤 영역 */}
+        <div className="p-4 overflow-y-auto"> {/* ▼ 수정: overflow-y-auto 추가 */}
           <div className="mb-4">
             <h3 className="text-white font-bold mb-2">미션 진행 상황</h3>
             <p className="text-gray-400 text-sm mb-2">현재 {progress}/20 조각을 모았습니다</p>
@@ -139,7 +140,7 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
             <div className="bg-gray-800 rounded-lg p-3 mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-white">미션 진행 상황</span>
-                <span className="text-sm font-bold text-white">35%</span>
+                <span className="text-sm font-bold text-white">{Math.round((progress / totalCards) * 100)}%</span> {/* 35% -> 동적으로 변경 */}
               </div>
               <Progress 
                 value={(progress / totalCards) * 100} 
@@ -414,17 +415,26 @@ export default function InfluencerDetailScreen({
             </div>
 
             {/* 미션 진행 상황 - 클릭 가능하게 수정 */}
-            <div 
-              className="bg-gray-900 rounded-lg p-4 cursor-pointer hover:bg-gray-800 transition-colors"
-              onClick={() => setShowMissionProgress(true)}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="text-sm text-gray-400">미션 진행 상황</div>
-                <div className="text-sm font-bold">{puzzleProgress}/20</div>
+<div
+  className="bg-gray-900 rounded-lg p-4 cursor-pointer hover:bg-gray-800 transition-colors"
+  onClick={() => setShowMissionProgress(true)}
+>
+  {/* 미션 진행 상황 - 클릭 가능하게 수정 */}
+            <div className="flex justify-between items-center mb-2">
+              <div className="text-sm text-gray-400">미션 진행 상황</div>
+              {/* ▼ 아이콘과 텍스트 추가 ▼ */}
+              <div className="text-sm flex items-center gap-1 text-gray-400">
+                <span>자세히 보기</span>
+                <ChevronRight className="w-4 h-4" />
               </div>
-              <Progress value={(puzzleProgress / 20) * 100} className="h-2 bg-gray-800" indicatorClassName="bg-[#FF0844]" />
-              <div className="mt-2 text-xs text-gray-400 text-center">20장 모두 수집 시 미공개 컷이 완성됩니다!</div>
             </div>
+            <div className="flex justify-between items-center mb-2">
+              <Progress value={(puzzleProgress / 20) * 100} className="h-2 bg-gray-800" indicatorClassName="bg-[#FF0844]" />
+              <div className="text-sm font-bold ml-4">{puzzleProgress}/20</div>
+            </div>
+            {/* ▲ 기존 Progress 컴포넌트를 위로 옮기고, 진행률 텍스트와 나란히 배치 ▲ */}
+            <div className="mt-2 text-xs text-gray-400 text-center">20장 모두 수집 시 미공개 컷이 완성됩니다!</div>
+          </div>
           </div>
         </div>
 
