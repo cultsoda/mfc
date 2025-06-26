@@ -131,8 +131,10 @@ export default function ImprovedMyCollection() {
   const [expandedInfluencers, setExpandedInfluencers] = useState<string[]>(["kimMinji"]) // 첫 번째만 펼친 상태
   const [showMyCollectionModal, setShowMyCollectionModal] = useState(false)
   const [showCardDetailModal, setShowCardDetailModal] = useState(false)
+  const [showMissionModal, setShowMissionModal] = useState(false)
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null)
   const [selectedCard, setSelectedCard] = useState<Card | null>(null)
+  const [missionInfluencer, setMissionInfluencer] = useState<Influencer | null>(null)
 
   // 라운드별 컬렉션 현황 계산
   const calculateRoundStats = (roundKey: keyof RoundsData) => {
@@ -187,6 +189,13 @@ export default function ImprovedMyCollection() {
   const handleCardClick = (card: Card) => {
     setSelectedCard(card)
     setShowCardDetailModal(true)
+  }
+
+  // 미션 보기 버튼 클릭
+  const handleMissionClick = (influencer: Influencer, e: React.MouseEvent) => {
+    e.stopPropagation() // 인플루언서 헤더 클릭 이벤트와 충돌 방지
+    setMissionInfluencer(influencer)
+    setShowMissionModal(true)
   }
 
   return (
@@ -287,6 +296,14 @@ export default function ImprovedMyCollection() {
                           <div className="text-right text-sm">
                             <div className="font-bold text-[#FF0844]">{completionPercentage}%</div>
                           </div>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => handleMissionClick(influencer, e)}
+                            className="text-xs px-2 py-1 h-6 border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white"
+                          >
+                            미션
+                          </Button>
                           {isExpanded ? (
                             <ChevronUp className="w-5 h-5 text-gray-400" />
                           ) : (
@@ -408,6 +425,15 @@ export default function ImprovedMyCollection() {
           isOpen={showCardDetailModal}
           onClose={() => setShowCardDetailModal(false)}
           card={selectedCard}
+        />
+      )}
+
+      {/* 미션 진행상황 모달 */}
+      {showMissionModal && missionInfluencer && (
+        <MissionProgressModal
+          isOpen={showMissionModal}
+          onClose={() => setShowMissionModal(false)}
+          influencer={missionInfluencer}
         />
       )}
     </div>
@@ -572,7 +598,142 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
   )
 }
 
-// 화보 상세 모달 컴포넌트  
+// 미션 진행상황 모달 컴포넌트
+interface MissionProgressModalProps {
+  isOpen: boolean
+  onClose: () => void
+  influencer: Influencer
+}
+
+const MissionProgressModal = ({ isOpen, onClose, influencer }: MissionProgressModalProps) => {
+  if (!isOpen) return null
+
+  const progress = influencer.collectedCards.length
+  const totalCards = influencer.totalCards
+  const progressPercentage = Math.round((progress / totalCards) * 100)
+  const isCompleted = progress === totalCards
+
+  // 퍼즐 조각 상태 생성 (5x4 그리드)
+  const puzzlePieces = Array(totalCards)
+    .fill(null)
+    .map((_, index) => ({
+      id: index + 1,
+      collected: index < progress,
+      isSpecial: [3, 8, 15].includes(index + 1), // S급 카드로 얻는 특별 조각 (예시)
+    }))
+
+  return (
+    <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        {/* 모달 헤더 */}
+        <div className="flex justify-between items-center p-4 border-b border-gray-700 bg-[#FF0844] text-white rounded-t-lg">
+          <h2 className="text-lg font-bold">{influencer.name} - 미션 진행</h2>
+          <button onClick={onClose} className="text-white hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* 모달 내용 */}
+        <div className="p-4">
+          {/* 전체 진행도 */}
+          <div className="mb-6 text-center">
+            <div className="text-2xl font-bold text-[#FF0844] mb-2">
+              {progress}/{totalCards} 완료
+            </div>
+            <div className="text-lg text-gray-300 mb-3">
+              {progressPercentage}% 달성
+            </div>
+            <Progress 
+              value={progressPercentage} 
+              className="h-3 bg-gray-800" 
+              indicatorClassName="bg-[#FF0844]" 
+            />
+            {!isCompleted && (
+              <div className="text-sm text-gray-400 mt-2">
+                {totalCards - progress}개 더 수집하면 미션 완료!
+              </div>
+            )}
+          </div>
+
+          {/* 퍼즐 그리드 */}
+          <div className="mb-6">
+            <h3 className="text-lg font-bold mb-3 text-center">컬렉션 진행 상황</h3>
+            <div className="grid grid-cols-5 gap-2 p-4 bg-gray-800 rounded-lg">
+              {puzzlePieces.map((piece) => (
+                <div
+                  key={piece.id}
+                  className={`aspect-square rounded-lg border-2 flex items-center justify-center ${
+                    piece.collected
+                      ? piece.isSpecial
+                        ? "border-yellow-500 bg-yellow-500/20"
+                        : "border-[#FF0844] bg-[#FF0844]/20"
+                      : "border-gray-600 bg-gray-700"
+                  }`}
+                >
+                  {piece.collected ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                      {piece.isSpecial ? (
+                        <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                          <span className="text-xs text-black font-bold">★</span>
+                        </div>
+                      ) : (
+                        <div className="w-6 h-6 bg-[#FF0844] rounded-full flex items-center justify-center">
+                          <span className="text-xs text-white">✓</span>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="w-4 h-4 rounded-full border-2 border-gray-500 flex items-center justify-center">
+                      <span className="text-xs text-gray-500">?</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 미션 정보 */}
+          <div className="bg-gray-800 rounded-lg p-4 mb-4">
+            <h3 className="font-bold mb-3 flex items-center text-[#FF0844]">
+              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732L14.146 12.8l-1.179 4.456a1 1 0 01-1.934 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732L9.854 7.2l1.179-4.456A1 1 0 0112 2z" clipRule="evenodd" />
+              </svg>
+              미션 완료 보상
+            </h3>
+            <div className="space-y-2 text-sm text-gray-300">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#FF0844]"></div>
+                <span>{influencer.name}의 모든 화보를 모으면 특별한 미공개 화보를 획득</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                <span>S급 화보를 뽑으면 특별 조각(★) 획득</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                <span>디지털 화보와 실물 포토카드 제작 할인 쿠폰 제공</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 완료 상태에 따른 버튼 */}
+          {isCompleted ? (
+            <Button 
+              className="w-full py-4 bg-gradient-to-r from-yellow-500 to-[#FF0844] hover:from-yellow-600 hover:to-[#FF0844]/90 text-white font-bold text-lg"
+              onClick={() => alert(`${influencer.name} 미션 완료 보상을 받았습니다!`)}
+            >
+              🎉 미션 완료 보상 받기 🎉
+            </Button>
+          ) : (
+            <div className="text-center text-gray-400 text-sm">
+              {influencer.name}의 화보 뽑기를 계속해서 미션을 완성해보세요!
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
 interface CardDetailModalProps {
   isOpen: boolean
   onClose: () => void
