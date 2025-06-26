@@ -16,7 +16,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 // 타입 정의
 interface Card {
   id: number
-  number: number
   grade: "S" | "A" | "C"
   image: string
 }
@@ -50,14 +49,14 @@ const roundsData: RoundsData = {
         name: "김민지",
         totalCards: 20,
         collectedCards: [
-          { id: 1, number: 1, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보1" },
-          { id: 3, number: 3, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보3" },
-          { id: 5, number: 5, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보5" },
-          { id: 7, number: 7, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" },
-          { id: 12, number: 12, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보12" },
-          { id: 15, number: 15, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보15" },
-          { id: 18, number: 18, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보18" },
-          { id: 20, number: 20, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보20" }
+          { id: 1, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보1" },
+          { id: 3, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보3" },
+          { id: 5, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보5" },
+          { id: 7, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" },
+          { id: 12, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보12" },
+          { id: 15, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보15" },
+          { id: 18, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보18" },
+          { id: 20, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보20" }
         ]
       },
       leeHaEun: {
@@ -65,11 +64,11 @@ const roundsData: RoundsData = {
         name: "이하은",
         totalCards: 20,
         collectedCards: [
-          { id: 21, number: 2, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보2" },
-          { id: 24, number: 4, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보4" },
-          { id: 26, number: 6, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보6" },
-          { id: 28, number: 8, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보8" },
-          { id: 30, number: 10, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보10" }
+          { id: 21, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보2" },
+          { id: 24, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보4" },
+          { id: 26, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보6" },
+          { id: 28, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보8" },
+          { id: 30, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보10" }
         ]
       },
       parkSeoA: {
@@ -77,14 +76,14 @@ const roundsData: RoundsData = {
         name: "박서아",
         totalCards: 20,
         collectedCards: [
-          { id: 41, number: 1, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보1" },
-          { id: 43, number: 3, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보3" },
-          { id: 45, number: 5, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보5" },
-          { id: 47, number: 7, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" },
-          { id: 49, number: 9, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보9" },
-          { id: 51, number: 11, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보11" },
-          { id: 53, number: 13, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보13" },
-          { id: 55, number: 15, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보15" }
+          { id: 41, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보1" },
+          { id: 43, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보3" },
+          { id: 45, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보5" },
+          { id: 47, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" },
+          { id: 49, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보9" },
+          { id: 51, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보11" },
+          { id: 53, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보13" },
+          { id: 55, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보15" }
         ]
       },
       jungDaHyun: {
@@ -92,10 +91,10 @@ const roundsData: RoundsData = {
         name: "정다현",
         totalCards: 20,
         collectedCards: [
-          { id: 61, number: 2, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보2" },
-          { id: 63, number: 4, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보4" },
-          { id: 65, number: 6, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보6" },
-          { id: 67, number: 8, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보8" }
+          { id: 61, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보2" },
+          { id: 63, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보4" },
+          { id: 65, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보6" },
+          { id: 67, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보8" }
         ]
       }
     }
@@ -309,15 +308,27 @@ export default function ImprovedMyCollection() {
                     {/* 펼쳐진 내용 */}
                     {isExpanded && (
                       <div className="border-t border-gray-700">
-                        {/* 포토카드&다운로드 버튼 */}
+                        {/* 버튼 영역 */}
                         <div className="p-4 border-b border-gray-700">
-                          <Button
-                            onClick={() => handlePhotocardDownload(influencer)}
-                            className="w-full bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
-                          >
-                            <Eye className="w-4 h-4" />
-                            포토카드 & 다운로드 ({influencer.collectedCards.length}장)
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              onClick={() => handlePhotocardDownload(influencer)}
+                              className="flex-1 bg-purple-600 hover:bg-purple-700 text-white flex items-center justify-center gap-2"
+                            >
+                              <Eye className="w-4 h-4" />
+                              포토카드 & 다운로드 ({influencer.collectedCards.length}장)
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                // 해당 인플루언서의 화보 뽑기 페이지로 이동하는 로직
+                                // 실제 구현에서는 onNavigateToInfluencer(influencer.id) 같은 함수 호출
+                                alert(`${influencer.name}의 화보 뽑기 페이지로 이동합니다.`)
+                              }}
+                              className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white px-4 whitespace-nowrap"
+                            >
+                              화보 뽑기
+                            </Button>
+                          </div>
                         </div>
 
                         {/* 화보 그리드 */}
@@ -335,7 +346,7 @@ export default function ImprovedMyCollection() {
                                   <div className="w-full h-full bg-gray-700 flex items-center justify-center">
                                     <img
                                       src={card.image}
-                                      alt={`화보 ${card.number}`}
+                                      alt={`${influencer.name} 화보`}
                                       className="w-full h-full object-cover"
                                       onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                                         const target = e.currentTarget
@@ -351,7 +362,7 @@ export default function ImprovedMyCollection() {
                                       className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-400 text-xs" 
                                       style={{ display: 'none' }}
                                     >
-                                      화보 {card.number}
+                                      화보
                                     </div>
                                   </div>
                                   
@@ -362,11 +373,6 @@ export default function ImprovedMyCollection() {
                                     'bg-gray-500 text-white'
                                   }`}>
                                     {card.grade}
-                                  </div>
-                                  
-                                  {/* 화보 번호 */}
-                                  <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-                                    #{card.number}
                                   </div>
                                 </div>
                               ))}
@@ -478,7 +484,7 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
 
               {/* 화보 그리드 */}
               <div className="grid grid-cols-3 gap-3 mb-4">
-                {influencer.collectedCards.map((card) => (
+                {influencer.collectedCards.map((card: Card) => (
                   <div key={card.id} className="relative">
                     <div 
                       className="bg-gray-800 rounded-lg overflow-hidden relative cursor-pointer hover:ring-2 hover:ring-[#FF0844] transition-all"
@@ -488,7 +494,7 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
                       <div className="w-full h-full bg-gray-700 flex items-center justify-center">
                         <img
                           src={card.image}
-                          alt={`화보 ${card.number}`}
+                          alt={`${influencer.name} 화보`}
                           className="w-full h-full object-cover"
                           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
                             const target = e.currentTarget
@@ -504,7 +510,7 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
                           className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm" 
                           style={{ display: 'none' }}
                         >
-                          화보 {card.number}
+                          화보
                         </div>
                       </div>
                       
@@ -515,11 +521,6 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
                         'bg-gray-500 text-white'
                       }`}>
                         {card.grade}
-                      </div>
-                      
-                      {/* 화보 번호 */}
-                      <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-                        #{card.number}
                       </div>
                     </div>
                     
@@ -593,14 +594,36 @@ const CardDetailModal = ({ isOpen, onClose, card }: CardDetailModalProps) => {
         </div>
 
         {/* 화보 이미지 */}
-        <div className="p-4">
-          <div className="aspect-[3/4] bg-gray-800 rounded-lg overflow-hidden relative mb-4">
-            <img
-              src={card.image}
-              alt={`화보 ${card.number}`}
-              className="w-full h-full object-cover"
-            />
-            <div className={`absolute top-2 right-2 px-2 py-1 text-sm rounded font-bold ${
+        <div className="p-6">
+          <div className="aspect-[3/4] bg-gray-800 rounded-lg overflow-hidden relative mb-6 border-2 border-gray-600 max-h-96">
+            <div className="w-full h-full bg-gray-700 flex items-center justify-center">
+              <img
+                src={card.image}
+                alt={`${card.grade}급 화보`}
+                className="w-full h-full object-cover"
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  const target = e.currentTarget
+                  const sibling = target.nextElementSibling as HTMLElement | null
+                  target.style.display = 'none'
+                  if (sibling) {
+                    sibling.style.display = 'flex'
+                  }
+                }}
+              />
+              {/* 이미지 로드 실패 시 플레이스홀더 */}
+              <div 
+                className="w-full h-full bg-gray-700 flex flex-col items-center justify-center text-gray-400" 
+                style={{ display: 'none' }}
+              >
+                <div className="w-20 h-20 border-2 border-gray-500 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-base">화보 이미지</span>
+              </div>
+            </div>
+            <div className={`absolute top-3 right-3 px-3 py-1.5 text-sm rounded font-bold ${
               card.grade === 'S' ? 'bg-yellow-500 text-black' :
               card.grade === 'A' ? 'bg-blue-500 text-white' :
               'bg-gray-500 text-white'
@@ -610,11 +633,7 @@ const CardDetailModal = ({ isOpen, onClose, card }: CardDetailModalProps) => {
           </div>
 
           {/* 화보 정보 */}
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-gray-400">화보 번호:</span>
-              <span>#{card.number}</span>
-            </div>
+          <div className="space-y-3 text-sm">
             <div className="flex justify-between">
               <span className="text-gray-400">등급:</span>
               <span className={
