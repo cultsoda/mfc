@@ -223,15 +223,6 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
               모든 조각을 수집하면 미공개컷을 볼 수 있어요
             </div>
           </div>
-          
-          <div className="mt-4">
-            <Button 
-              onClick={onClose}
-              className="w-full py-3 bg-gray-700 hover:bg-gray-600 text-white"
-            >
-              다시 뽑기
-            </Button>
-          </div>
         </div>
       </div>
     </div>

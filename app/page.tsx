@@ -13,7 +13,7 @@ import PurchaseScreen from "@/components/purchase-screen"
 import ShippingForm from "@/components/shipping-form"
 import InfluencerListScreen from "@/components/influencer-list-screen"
 import InfluencerDetailScreen from "@/components/influencer-detail-screen"
-import MyPage from "@/components/my-page"
+import ImprovedMyCollection from "@/components/my-page"
 
 // 새로운 컴포넌트들 (실제 프로젝트에서는 해당 파일들을 생성해야 함)
 // import VotingScreen from "@/components/voting-screen-updated"
@@ -76,7 +76,7 @@ export default function MainApp() {
   const [selectedInfluencer, setSelectedInfluencer] = useState<string | null>(null)
   const [currentCard, setCurrentCard] = useState<any>(null)
   const [selectedCards, setSelectedCards] = useState<any[]>([])
-  const [myPageActiveTab, setMyPageActiveTab] = useState<"purchase-history" | "my-collection">("purchase-history")
+  
 
   // 현재 활성 탭 결정
   const getActiveTab = () => {
@@ -296,15 +296,9 @@ export default function MainApp() {
         )
       
       case "my-page":
-        return (
-          <MyPage
-            activeTab={myPageActiveTab}
-            onTabChange={setMyPageActiveTab}
-            onBackToMain={() => setScreen("home")}
-            onShowCollection={() => setScreen("collection")}
-            onGoToPhotos={() => setScreen("influencer-list")}
-          />
-        )
+      return (
+        <ImprovedMyCollection />
+      )
       
       default:
         return renderHomeScreen()
