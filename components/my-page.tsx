@@ -248,6 +248,13 @@ export default function ImprovedMyPage() {
   const [missionInfluencer, setMissionInfluencer] = useState<Influencer | null>(null)
   const [selectedImage, setSelectedImage] = useState<string>("")
 
+  // 페이지 이동 함수 (부모 컴포넌트에서 전달받아야 함)
+  const handleNavigateToInfluencer = (influencerId: string) => {
+    // 실제 구현에서는 부모 컴포넌트의 setScreen과 setSelectedInfluencer를 호출해야 함
+    // 예: onNavigateToInfluencer?.(influencerId)
+    alert(`${influencerId} 인플루언서의 화보 뽑기 페이지로 이동합니다.`)
+  }
+
   // 라운드별 컬렉션 현황 계산
   const calculateRoundStats = (roundKey: keyof RoundsData) => {
     const round = roundsData[roundKey]
@@ -477,9 +484,7 @@ export default function ImprovedMyPage() {
                               포토카드 & 다운로드 ({influencer.collectedCards.length}장)
                             </Button>
                             <Button
-                              onClick={() => {
-                                alert(`${influencer.name}의 화보 뽑기 페이지로 이동합니다.`)
-                              }}
+                              onClick={() => handleNavigateToInfluencer(influencer.id)}
                               className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white px-4 whitespace-nowrap"
                             >
                               화보 뽑기
@@ -748,19 +753,27 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
     )
   }
 
-  const isAllCollected = influencer.collectedCards.length === influencer.totalCards
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedCardIds(influencer.collectedCards.map((card: Card) => card.id))
+    } else {
+      setSelectedCardIds([])
+    }
+  }
+
+  const isAllSelected = selectedCardIds.length === influencer.collectedCards.length && influencer.collectedCards.length > 0
   const isAnyCardSelected = selectedCardIds.length > 0
 
   const handleDownload = () => {
-    if (isAllCollected) {
-      alert('일괄 다운로드(ZIP)가 시작됩니다.')
-    } else {
-      alert(`${selectedCardIds.length}개의 화보를 개별 다운로드합니다.`)
+    if (isAnyCardSelected) {
+      alert(`${selectedCardIds.length}개의 화보를 다운로드합니다.`)
     }
   }
 
   const handleCreatePhotocard = () => {
-    alert(`${selectedCardIds.length}개의 포토카드를 제작합니다.`)
+    if (isAnyCardSelected) {
+      alert(`${selectedCardIds.length}개의 포토카드를 제작합니다.`)
+    }
   }
 
   return (
@@ -782,14 +795,8 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
               <div className="flex items-center gap-2 mb-4 p-3 bg-gray-800 rounded-lg">
                 <Checkbox
                   id="selectAll"
-                  checked={selectedCardIds.length === influencer.collectedCards.length && influencer.collectedCards.length > 0}
-                  onCheckedChange={(checked: boolean) => {
-                    if (checked) {
-                      setSelectedCardIds(influencer.collectedCards.map((card: Card) => card.id))
-                    } else {
-                      setSelectedCardIds([])
-                    }
-                  }}
+                  checked={isAllSelected}
+                  onCheckedChange={handleSelectAll}
                 />
                 <label htmlFor="selectAll" className="text-sm cursor-pointer">
                   전체 선택 ({selectedCardIds.length}/{influencer.collectedCards.length})
@@ -850,11 +857,11 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
             <div className="flex gap-2">
               <Button
                 onClick={handleDownload}
-                disabled={!isAllCollected && !isAnyCardSelected}
+                disabled={!isAnyCardSelected}
                 className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 text-white flex items-center justify-center gap-2"
               >
                 <Download className="w-4 h-4" />
-                {isAllCollected ? '일괄 다운로드' : `다운로드 (${selectedCardIds.length})`}
+                다운로드 ({selectedCardIds.length})
               </Button>
               <Button
                 onClick={handleCreatePhotocard}

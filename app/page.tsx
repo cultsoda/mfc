@@ -209,6 +209,7 @@ export default function MainApp() {
             card={currentCard}
             onBackToMain={() => setScreen("influencer-detail")}
             onShowCollection={() => setScreen("collection")}
+            onGoToMyPage={() => setScreen("my-page")} // ✅ 추가
             onShowMission={() => setScreen("mission")}
             onAddToCollection={() => {  // ✅ 파라미터 제거
               // 컬렉션에 카드 추가 로직
@@ -240,7 +241,7 @@ export default function MainApp() {
       case "purchase":
         return (
           <PurchaseScreen
-            onBack={() => setScreen("collection")}
+            onBack={() => setScreen("influencer-detail")} // ✅ 수정: 바로 전 페이지로 이동
             onShowShipping={() => setScreen("shipping")}
           />
         )

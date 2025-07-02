@@ -1,15 +1,12 @@
 "use client"
 
 import { Progress } from "@/components/ui/progress"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Download } from "lucide-react"
-// ✅ 더 좋은 해결책
 const confetti = require("canvas-confetti")
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ShippingForm from "./shipping-form"
-// 상단에 ShareButton import 추가
 import ShareButton from "./share-button"
 
 interface ResultScreenProps {
@@ -22,7 +19,8 @@ interface ResultScreenProps {
   } | null
   onBackToMain: () => void
   onAddToCollection: () => void
-  onShowCollection: () => void
+  onShowCollection: () => void  // 기존: 내 컬렉션 상세로 이동
+  onGoToMyPage: () => void      // 추가: 마이페이지로 이동
   onShowPurchase: () => void
   onShowMission?: () => void
 }
@@ -32,6 +30,7 @@ export default function ResultScreen({
   onBackToMain,
   onAddToCollection,
   onShowCollection,
+  onGoToMyPage,        // 새로 추가된 prop
   onShowPurchase,
 }: ResultScreenProps) {
   const [showShipping, setShowShipping] = useState(false)
@@ -303,7 +302,7 @@ export default function ResultScreen({
             <Button
               variant="outline"
               className="py-6 border-[#FF0844] text-[#FF0844] hover:bg-[#FF0844]/10"
-              onClick={() => onShowCollection()}
+              onClick={() => onGoToMyPage()} // 수정: onShowCollection() → onGoToMyPage()
             >
               내 컬렉션 보기
             </Button>

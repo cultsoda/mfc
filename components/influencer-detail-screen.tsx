@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { ChevronRight, ArrowLeft, X, Grid3X3, Eye } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"; // Checkbox 컴포넌트 import
-import { Download } from "lucide-react"; // Download 아이콘 import
+import { Checkbox } from "@/components/ui/checkbox"
+import { Download } from "lucide-react"
 
 interface InfluencerDetailScreenProps {
   influencerId: string | null
@@ -19,48 +19,52 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage, influencer 
   onClose: () => void
   myCards: any[]
   onGoToMyPage: () => void
-  influencer: { totalCount: number } // influencer 정보 prop 추가
+  influencer: { totalCount: number }
 }) => {
   if (!isOpen) return null
 
   // 선택된 카드를 관리할 상태 추가
-  const [selectedCardIds, setSelectedCardIds] = useState<number[]>([]);
+  const [selectedCardIds, setSelectedCardIds] = useState<number[]>([])
 
   const handleCardSelect = (cardId: number) => {
     setSelectedCardIds(prev =>
       prev.includes(cardId)
         ? prev.filter(id => id !== cardId)
         : [...prev, cardId]
-    );
-  };
+    )
+  }
 
-  const isAllCollected = myCards.length === influencer.totalCount;
-  const isAnyCardSelected = selectedCardIds.length > 0;
+  // 전체 선택 기능 추가
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedCardIds(myCards.map(card => card.number))
+    } else {
+      setSelectedCardIds([])
+    }
+  }
+
+  const isAllCollected = myCards.length === influencer.totalCount
+  const isAllSelected = selectedCardIds.length === myCards.length && myCards.length > 0
+  const isAnyCardSelected = selectedCardIds.length > 0
 
   const handleDownload = () => {
-    if (isAllCollected) {
-      // ZIP 파일 다운로드 로직 (시뮬레이션)
-      alert('일괄 다운로드(ZIP)가 시작됩니다.');
-      console.log('Downloading ZIP file for influencer...');
+    if (isAllCollected && isAllSelected) {
+      alert('일괄 다운로드(ZIP)가 시작됩니다.')
     } else {
-      // 선택한 파일 개별 다운로드 로직 (시뮬레이션)
-      alert(`${selectedCardIds.length}개의 화보를 개별 다운로드합니다.`);
-      console.log('Downloading selected files:', selectedCardIds);
+      alert(`${selectedCardIds.length}개의 화보를 개별 다운로드합니다.`)
     }
-  };
+  }
   
   const handleCreatePhotocard = () => {
-      // 선택된 카드 정보를 가지고 포토카드 제작 페이지로 이동하거나,
-      // 상태를 업데이트하여 다음 동작을 처리합니다.
-      console.log("만들 포토카드 ID:", selectedCardIds);
-      onGoToMyPage(); // 기존 로직은 유지
+    console.log("만들 포토카드 ID:", selectedCardIds)
+    onGoToMyPage()
   }
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] flex flex-col"> {/* flex, flex-col 추가 */}
+      <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] flex flex-col">
         {/* 모달 헤더 */}
-        <div className="flex justify-between items-center p-4 border-b border-gray-700 flex-shrink-0"> {/* flex-shrink-0 추가 */}
+        <div className="flex justify-between items-center p-4 border-b border-gray-700 flex-shrink-0">
           <h2 className="text-lg font-bold text-white">내가 뽑은 화보</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <X className="w-6 h-6" />
@@ -68,31 +72,45 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage, influencer 
         </div>
         
         {/* 모달 내용 */}
-        <div className="p-4 overflow-y-auto"> {/* overflow-y-auto 추가 */}
+        <div className="p-4 overflow-y-auto flex-1">
           {myCards.length > 0 ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
-              {myCards.map((card, index) => (
-                <div key={index} className="relative cursor-pointer" onClick={() => handleCardSelect(card.number)}>
-                  <div className="absolute top-1 left-1 z-10">
-                    <Checkbox
-                      id={`card-${card.number}`}
-                      checked={selectedCardIds.includes(card.number)}
-                      className="bg-white/80"
-                    />
+            <>
+              {/* 전체 선택 체크박스 추가 */}
+              <div className="flex items-center gap-2 mb-4 p-3 bg-gray-800 rounded-lg">
+                <Checkbox
+                  id="selectAll"
+                  checked={isAllSelected}
+                  onCheckedChange={handleSelectAll}
+                />
+                <label htmlFor="selectAll" className="text-sm cursor-pointer text-white">
+                  전체 선택 ({selectedCardIds.length}/{myCards.length})
+                </label>
+              </div>
+
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+                {myCards.map((card, index) => (
+                  <div key={index} className="relative cursor-pointer" onClick={() => handleCardSelect(card.number)}>
+                    <div className="absolute top-1 left-1 z-10">
+                      <Checkbox
+                        id={`card-${card.number}`}
+                        checked={selectedCardIds.includes(card.number)}
+                        className="bg-white/80"
+                      />
+                    </div>
+                    <div className={`w-full aspect-[3/4] rounded-lg overflow-hidden border-2 ${selectedCardIds.includes(card.number) ? 'border-pink-500' : 'border-transparent'}`}>
+                      <img
+                        src={card.image || "/placeholder.svg"}
+                        alt={`화보 ${card.number}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="absolute top-1 right-1 bg-pink-500 text-white text-xs px-1 rounded">
+                      #{card.number}
+                    </div>
                   </div>
-                  <div className={`w-full aspect-[3/4] rounded-lg overflow-hidden border-2 ${selectedCardIds.includes(card.number) ? 'border-pink-500' : 'border-transparent'}`}>
-                    <img
-                      src={card.image || "/placeholder.svg"}
-                      alt={`화보 ${card.number}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="absolute top-1 right-1 bg-pink-500 text-white text-xs px-1 rounded">
-                    #{card.number}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           ) : (
             <div className="text-center py-8 text-gray-400">
               <Grid3X3 className="w-12 h-12 mx-auto mb-2 opacity-50" />
@@ -100,10 +118,12 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage, influencer 
               <p className="text-sm mt-1">화보를 뽑아보세요!</p>
             </div>
           )}
-          
-          {/* 하단 버튼 영역 */}
-          <div className="border-t border-gray-700 pt-4 mt-auto"> {/* mt-auto 추가 */}
-            {isAllCollected ? (
+        </div>
+        
+        {/* 하단 버튼 영역 */}
+        {myCards.length > 0 && (
+          <div className="p-4 border-t border-gray-700 flex-shrink-0">
+            {isAllCollected && isAllSelected ? (
               <Button
                 onClick={handleDownload}
                 className="w-full py-3 bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2"
@@ -132,7 +152,7 @@ const MyCollectionModal = ({ isOpen, onClose, myCards, onGoToMyPage, influencer 
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   )
@@ -177,10 +197,9 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
 
   return (
     <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-      {/* ▼ 수정: flex, flex-col 추가 */}
       <div className="bg-gray-900 rounded-lg w-full max-w-lg max-h-[80vh] flex flex-col">
         {/* 모달 헤더 */}
-        <div className="bg-red-600 p-4 flex-shrink-0"> {/* ▼ 수정: flex-shrink-0 추가 */}
+        <div className="bg-red-600 p-4 flex-shrink-0">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold text-white">미션 진행</h2>
             <button onClick={onClose} className="text-white/80 hover:text-white">
@@ -190,7 +209,7 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
         </div>
         
         {/* 미션 진행 상황 - 스크롤 영역 */}
-        <div className="p-4 overflow-y-auto"> {/* ▼ 수정: overflow-y-auto 추가 */}
+        <div className="p-4 overflow-y-auto">
           <div className="mb-4">
             <h3 className="text-white font-bold mb-2">미션 진행 상황</h3>
             <p className="text-gray-400 text-sm mb-2">현재 {progress}/20 조각을 모았습니다</p>
@@ -199,7 +218,7 @@ const MissionProgressModal = ({ isOpen, onClose, progress, totalCards }: {
             <div className="bg-gray-800 rounded-lg p-3 mb-4">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-sm text-white">미션 진행 상황</span>
-                <span className="text-sm font-bold text-white">{Math.round((progress / totalCards) * 100)}%</span> {/* 35% -> 동적으로 변경 */}
+                <span className="text-sm font-bold text-white">{Math.round((progress / totalCards) * 100)}%</span>
               </div>
               <Progress 
                 value={(progress / totalCards) * 100} 
@@ -465,26 +484,23 @@ export default function InfluencerDetailScreen({
             </div>
 
             {/* 미션 진행 상황 - 클릭 가능하게 수정 */}
-<div
-  className="bg-gray-900 rounded-lg p-4 cursor-pointer hover:bg-gray-800 transition-colors"
-  onClick={() => setShowMissionProgress(true)}
->
-  {/* 미션 진행 상황 - 클릭 가능하게 수정 */}
-            <div className="flex justify-between items-center mb-2">
-              <div className="text-sm text-gray-400">미션 진행 상황</div>
-              {/* ▼ 아이콘과 텍스트 추가 ▼ */}
-              <div className="text-sm flex items-center gap-1 text-gray-400">
-                <span>자세히 보기</span>
-                <ChevronRight className="w-4 h-4" />
+            <div
+              className="bg-gray-900 rounded-lg p-4 cursor-pointer hover:bg-gray-800 transition-colors"
+              onClick={() => setShowMissionProgress(true)}
+            >
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-sm text-gray-400">미션 진행 상황</div>
+                <div className="text-sm flex items-center gap-1 text-gray-400">
+                  <span>자세히 보기</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
               </div>
+              <div className="flex justify-between items-center mb-2">
+                <Progress value={(puzzleProgress / 20) * 100} className="h-2 bg-gray-800 flex-1 mr-4" indicatorClassName="bg-[#FF0844]" />
+                <div className="text-sm font-bold">{puzzleProgress}/20</div>
+              </div>
+              <div className="mt-2 text-xs text-gray-400 text-center">20장 모두 수집 시 미공개 컷이 완성됩니다!</div>
             </div>
-            <div className="flex justify-between items-center mb-2">
-              <Progress value={(puzzleProgress / 20) * 100} className="h-2 bg-gray-800" indicatorClassName="bg-[#FF0844]" />
-              <div className="text-sm font-bold ml-4">{puzzleProgress}/20</div>
-            </div>
-            {/* ▲ 기존 Progress 컴포넌트를 위로 옮기고, 진행률 텍스트와 나란히 배치 ▲ */}
-            <div className="mt-2 text-xs text-gray-400 text-center">20장 모두 수집 시 미공개 컷이 완성됩니다!</div>
-          </div>
           </div>
         </div>
 
@@ -523,7 +539,7 @@ export default function InfluencerDetailScreen({
         onClose={() => setShowMyCollection(false)}
         myCards={myCards}
         onGoToMyPage={() => onGoToMyPage && onGoToMyPage()}
-        influencer={{ totalCount: 20 }} // 예시로 총 개수 20 전달
+        influencer={{ totalCount: 20 }}
       />
       
       <MissionProgressModal
