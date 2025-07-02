@@ -223,7 +223,11 @@ const roundsData: RoundsData = {
   }
 }
 
-export default function ImprovedMyPage() {
+interface ImprovedMyPageProps {
+  onNavigateToInfluencer?: (influencerId: string) => void
+}
+
+export default function ImprovedMyPage({ onNavigateToInfluencer }: ImprovedMyPageProps) {
   const [activeTab, setActiveTab] = useState<"photos" | "purchased">("photos")
   const [activeRound, setActiveRound] = useState<keyof RoundsData>("round1")
   const [expandedInfluencers, setExpandedInfluencers] = useState<string[]>(["kimMinji"])
@@ -248,45 +252,25 @@ export default function ImprovedMyPage() {
   const [missionInfluencer, setMissionInfluencer] = useState<Influencer | null>(null)
   const [selectedImage, setSelectedImage] = useState<string>("")
 
-  // 페이지 이동 함수 (부모 컴포넌트에서 전달받아야 함)
+  // 페이지 이동 함수
   const handleNavigateToInfluencer = (influencerId: string) => {
-    // 실제 구현에서는 부모 컴포넌트의 setScreen과 setSelectedInfluencer를 호출해야 함
-    // 예: onNavigateToInfluencer?.(influencerId)
-    alert(`${influencerId} 인플루언서의 화보 뽑기 페이지로 이동합니다.`)
-  }
-
-  // 라운드별 컬렉션 현황 계산
-  const calculateRoundStats = (roundKey: keyof RoundsData) => {
-    const round = roundsData[roundKey]
-    if (!round) return { S: "0/0", A: "0/0", C: "0/0", total: "0/0" }
-
-    let totalCollected = 0
-    let totalCards = 0
-    const gradeStats = { S: 0, A: 0, C: 0 }
-    const gradeTotals = { S: 0, A: 0, C: 0 }
-
-    Object.values(round.influencers).forEach((influencer: Influencer) => {
-      totalCards += influencer.totalCards
-      totalCollected += influencer.collectedCards.length
-
-      gradeTotals.S += 6
-      gradeTotals.A += 9  
-      gradeTotals.C += 5
-
-      influencer.collectedCards.forEach((card: Card) => {
-        gradeStats[card.grade]++
-      })
-    })
-
-    return {
-      S: `${gradeStats.S}/${gradeTotals.S}`,
-      A: `${gradeStats.A}/${gradeTotals.A}`,
-      C: `${gradeStats.C}/${gradeTotals.C}`,
-      total: `${totalCollected}/${totalCards}`
+    if (onNavigateToInfluencer) {
+      onNavigateToInfluencer(influencerId)
+    } else {
+      alert(`${influencerId} 인플루언서의 화보 뽑기 페이지로 이동합니다.`)
     }
   }
 
-  const currentRoundStats = calculateRoundStats(activeRound)
+  // 개별 인플루언서의 등급별 통계 계산
+  const calculateInfluencerGradeStats = (influencer: Influencer) => {
+    const gradeStats = { S: 0, A: 0, C: 0 }
+    
+    influencer.collectedCards.forEach((card: Card) => {
+      gradeStats[card.grade]++
+    })
+    
+    return gradeStats
+  }
 
   // 토글 함수들
   const toggleInfluencer = (influencerId: string) => {
@@ -390,33 +374,14 @@ export default function ImprovedMyPage() {
               </div>
             </div>
 
-            {/* 컬렉션 현황 */}
-            <div className="bg-gray-900 rounded-lg p-4 mb-6">
-              <div className="flex justify-between items-center mb-3">
-                <div className="text-sm text-gray-400">컬렉션 현황</div>
-                <div className="text-sm font-bold">{currentRoundStats.total} 수집</div>
-              </div>
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-gray-800 p-3 rounded-lg text-center">
-                  <div className="text-xs text-gray-400 mb-1">S급</div>
-                  <div className="text-sm font-bold">{currentRoundStats.S}</div>
-                </div>
-                <div className="bg-gray-800 p-3 rounded-lg text-center">
-                  <div className="text-xs text-gray-400 mb-1">A급</div>
-                  <div className="text-sm font-bold">{currentRoundStats.A}</div>
-                </div>
-                <div className="bg-gray-800 p-3 rounded-lg text-center">
-                  <div className="text-xs text-gray-400 mb-1">C급</div>
-                  <div className="text-sm font-bold">{currentRoundStats.C}</div>
-                </div>
-              </div>
-            </div>
+            {/* 컬렉션 현황 삭제 */}
 
             {/* 인플루언서별 컬렉션 */}
             <div className="space-y-4">
               {Object.entries(roundsData[activeRound].influencers).map(([influencerId, influencer]) => {
                 const isExpanded = expandedInfluencers.includes(influencerId)
                 const completionPercentage = Math.round((influencer.collectedCards.length / influencer.totalCards) * 100)
+                const gradeStats = calculateInfluencerGradeStats(influencer)
                 
                 return (
                   <div key={influencerId} className="bg-gray-900 rounded-lg overflow-hidden">
@@ -434,6 +399,11 @@ export default function ImprovedMyPage() {
                             <div className="font-bold">{influencer.name}</div>
                             <div className="text-sm text-gray-400">
                               {influencer.collectedCards.length}/{influencer.totalCards} 수집
+                              {influencer.collectedCards.length > 0 && (
+                                <span className="ml-1">
+                                  (S급 {gradeStats.S}장, A급 {gradeStats.A}장, C급 {gradeStats.C}장)
+                                </span>
+                              )}
                               {influencer.collectedCards.length === influencer.totalCards && (
                                 <CheckCircle2 className="w-4 h-4 text-green-400 inline ml-2" />
                               )}

@@ -298,7 +298,12 @@ export default function MainApp() {
       
       case "my-page":
       return (
-        <ImprovedMyCollection />
+        <ImprovedMyCollection 
+          onNavigateToInfluencer={(influencerId) => {
+            setSelectedInfluencer(influencerId)
+            setScreen("influencer-detail")
+          }}
+        />
       )
       
       default:
