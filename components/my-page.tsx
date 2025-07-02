@@ -27,9 +27,18 @@ interface Influencer {
   collectedCards: Card[]
 }
 
+interface PurchasedContent {
+  id: string
+  name: string
+  bCutPhotos?: string[] // B컷 화보 (20장)
+  allPackPhotos?: string[] // 올팩 (2장)
+  specialPackPhotos?: string[] // 스페셜팩 (1,2라운드: 3장 / 3,4라운드: 1장)
+}
+
 interface Round {
   name: string
   influencers: Record<string, Influencer>
+  purchasedContent: Record<string, PurchasedContent>
 }
 
 interface RoundsData {
@@ -79,22 +88,36 @@ const roundsData: RoundsData = {
           { id: 41, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보1" },
           { id: 43, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보3" },
           { id: 45, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보5" },
-          { id: 47, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" },
-          { id: 49, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보9" },
-          { id: 51, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보11" },
-          { id: 53, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보13" },
-          { id: 55, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보15" }
+          { id: 47, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보7" }
+        ]
+      }
+    },
+    purchasedContent: {
+      kimMinji: {
+        id: "kimMinji",
+        name: "김민지",
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=민지스페셜1",
+          "/placeholder.svg?height=300&width=200&text=민지스페셜2",
+          "/placeholder.svg?height=300&width=200&text=민지스페셜3"
         ]
       },
-      jungDaHyun: {
-        id: "jungDaHyun",
-        name: "정다현",
-        totalCards: 20,
-        collectedCards: [
-          { id: 61, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보2" },
-          { id: 63, grade: "C", image: "/placeholder.svg?height=300&width=200&text=화보4" },
-          { id: 65, grade: "S", image: "/placeholder.svg?height=300&width=200&text=화보6" },
-          { id: 67, grade: "A", image: "/placeholder.svg?height=300&width=200&text=화보8" }
+      leeHaEun: {
+        id: "leeHaEun",
+        name: "이하은",
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=하은스페셜1",
+          "/placeholder.svg?height=300&width=200&text=하은스페셜2",
+          "/placeholder.svg?height=300&width=200&text=하은스페셜3"
+        ]
+      },
+      parkSeoA: {
+        id: "parkSeoA",
+        name: "박서아",
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=서아스페셜1",
+          "/placeholder.svg?height=300&width=200&text=서아스페셜2",
+          "/placeholder.svg?height=300&width=200&text=서아스페셜3"
         ]
       }
     }
@@ -113,28 +136,117 @@ const roundsData: RoundsData = {
         name: "이하은",
         totalCards: 20,
         collectedCards: []
+      },
+      parkSeoA: {
+        id: "parkSeoA",
+        name: "박서아",
+        totalCards: 20,
+        collectedCards: []
+      }
+    },
+    purchasedContent: {
+      kimMinji: {
+        id: "kimMinji",
+        name: "김민지",
+        bCutPhotos: Array.from({ length: 20 }, (_, i) => 
+          `/placeholder.svg?height=300&width=200&text=민지B컷${i + 1}`
+        ),
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=민지스페셜1",
+          "/placeholder.svg?height=300&width=200&text=민지스페셜2",
+          "/placeholder.svg?height=300&width=200&text=민지스페셜3"
+        ]
+      },
+      leeHaEun: {
+        id: "leeHaEun",
+        name: "이하은",
+        bCutPhotos: Array.from({ length: 20 }, (_, i) => 
+          `/placeholder.svg?height=300&width=200&text=하은B컷${i + 1}`
+        ),
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=하은스페셜1",
+          "/placeholder.svg?height=300&width=200&text=하은스페셜2",
+          "/placeholder.svg?height=300&width=200&text=하은스페셜3"
+        ]
       }
     }
   },
   round3: {
     name: "라운드 3",
-    influencers: {}
+    influencers: {},
+    purchasedContent: {
+      kimMinji: {
+        id: "kimMinji",
+        name: "김민지",
+        bCutPhotos: Array.from({ length: 20 }, (_, i) => 
+          `/placeholder.svg?height=300&width=200&text=민지B컷${i + 1}`
+        ),
+        allPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=민지올팩1",
+          "/placeholder.svg?height=300&width=200&text=민지올팩2"
+        ],
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=민지미공개셀카1"
+        ]
+      },
+      leeHaEun: {
+        id: "leeHaEun",
+        name: "이하은",
+        bCutPhotos: Array.from({ length: 20 }, (_, i) => 
+          `/placeholder.svg?height=300&width=200&text=하은B컷${i + 1}`
+        ),
+        allPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=하은올팩1",
+          "/placeholder.svg?height=300&width=200&text=하은올팩2"
+        ],
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=하은미공개셀카1"
+        ]
+      },
+      parkSeoA: {
+        id: "parkSeoA",
+        name: "박서아",
+        allPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=서아올팩1",
+          "/placeholder.svg?height=300&width=200&text=서아올팩2"
+        ],
+        specialPackPhotos: [
+          "/placeholder.svg?height=300&width=200&text=서아미공개셀카1"
+        ]
+      }
+    }
   },
   round4: {
-    name: "라운드 4", 
-    influencers: {}
+    name: "라운드 4",
+    influencers: {},
+    purchasedContent: {}
   }
 }
 
-export default function ImprovedMyCollection() {
+export default function ImprovedMyPage() {
+  const [activeTab, setActiveTab] = useState<"photos" | "purchased">("photos")
   const [activeRound, setActiveRound] = useState<keyof RoundsData>("round1")
-  const [expandedInfluencers, setExpandedInfluencers] = useState<string[]>(["kimMinji"]) // 첫 번째만 펼친 상태
+  const [expandedInfluencers, setExpandedInfluencers] = useState<string[]>(["kimMinji"])
+  
+  // 구매 상품 탭의 펼쳐진 상태 - 라운드별로 첫 번째 인플루언서 자동 펼침
+  const [expandedPurchased, setExpandedPurchased] = useState<Record<string, string[]>>({
+    round1: ["kimMinji"],
+    round2: ["kimMinji"], 
+    round3: ["kimMinji"],
+    round4: []
+  })
+  
+  // 모달 상태들
   const [showMyCollectionModal, setShowMyCollectionModal] = useState(false)
   const [showCardDetailModal, setShowCardDetailModal] = useState(false)
   const [showMissionModal, setShowMissionModal] = useState(false)
+  const [showImageModal, setShowImageModal] = useState(false)
+  
+  // 선택된 항목들
   const [selectedInfluencer, setSelectedInfluencer] = useState<Influencer | null>(null)
   const [selectedCard, setSelectedCard] = useState<Card | null>(null)
   const [missionInfluencer, setMissionInfluencer] = useState<Influencer | null>(null)
+  const [selectedImage, setSelectedImage] = useState<string>("")
 
   // 라운드별 컬렉션 현황 계산
   const calculateRoundStats = (roundKey: keyof RoundsData) => {
@@ -150,7 +262,6 @@ export default function ImprovedMyCollection() {
       totalCards += influencer.totalCards
       totalCollected += influencer.collectedCards.length
 
-      // 각 등급별 통계 계산 (가정: 각 인플루언서당 S:6, A:9, C:5)
       gradeTotals.S += 6
       gradeTotals.A += 9  
       gradeTotals.C += 5
@@ -170,7 +281,7 @@ export default function ImprovedMyCollection() {
 
   const currentRoundStats = calculateRoundStats(activeRound)
 
-  // 인플루언서 펼치기/접기 토글
+  // 토글 함수들
   const toggleInfluencer = (influencerId: string) => {
     setExpandedInfluencers(prev =>
       prev.includes(influencerId)
@@ -179,23 +290,48 @@ export default function ImprovedMyCollection() {
     )
   }
 
-  // 포토카드&다운로드 버튼 클릭
+  const togglePurchasedInfluencer = (influencerId: string) => {
+    setExpandedPurchased(prev => ({
+      ...prev,
+      [activeRound]: prev[activeRound].includes(influencerId)
+        ? prev[activeRound].filter(id => id !== influencerId)
+        : [...prev[activeRound], influencerId]
+    }))
+  }
+
+  // 이벤트 핸들러들
   const handlePhotocardDownload = (influencer: Influencer) => {
     setSelectedInfluencer(influencer)
     setShowMyCollectionModal(true)
   }
 
-  // 화보 카드 클릭
   const handleCardClick = (card: Card) => {
     setSelectedCard(card)
     setShowCardDetailModal(true)
   }
 
-  // 미션 보기 버튼 클릭
   const handleMissionClick = (influencer: Influencer, e: React.MouseEvent) => {
-    e.stopPropagation() // 인플루언서 헤더 클릭 이벤트와 충돌 방지
+    e.stopPropagation()
     setMissionInfluencer(influencer)
     setShowMissionModal(true)
+  }
+
+  const handleImageClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc)
+    setShowImageModal(true)
+  }
+
+  const handleDownloadImage = () => {
+    const link = document.createElement('a')
+    link.href = selectedImage
+    link.download = `image_${Date.now()}.jpg`
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
+  const handleBulkDownload = (influencerName: string, images: string[]) => {
+    alert(`${influencerName}의 B컷 화보 ${images.length}장을 일괄 다운로드합니다.`)
   }
 
   return (
@@ -209,18 +345,20 @@ export default function ImprovedMyCollection() {
           <h2 className="text-xl font-bold">마이페이지</h2>
         </div>
 
-        {/* 탭 네비게이션 */}
-        <Tabs defaultValue="my-collection" className="w-full">
+        {/* 메인 탭 네비게이션 */}
+        <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as "photos" | "purchased")}
+ className="w-full">
           <TabsList className="bg-gray-900 w-full mb-6">
-            <TabsTrigger value="purchase-history" className="flex-1 data-[state=active]:bg-[#FF0844]">
-              구매 내역
+            <TabsTrigger value="photos" className="flex-1 data-[state=active]:bg-[#FF0844]">
+              화보 뽑기
             </TabsTrigger>
-            <TabsTrigger value="my-collection" className="flex-1 data-[state=active]:bg-[#FF0844]">
-              내 컬렉션
+            <TabsTrigger value="purchased" className="flex-1 data-[state=active]:bg-[#FF0844]">
+              구매 상품
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="my-collection">
+          {/* 화보 뽑기 탭 */}
+          <TabsContent value="photos">
             {/* 라운드 구분 탭 */}
             <div className="mb-6">
               <div className="flex gap-2 overflow-x-auto pb-2">
@@ -264,7 +402,7 @@ export default function ImprovedMyCollection() {
               </div>
             </div>
 
-            {/* 인플루언서별 컬렉션 (접이식) */}
+            {/* 인플루언서별 컬렉션 */}
             <div className="space-y-4">
               {Object.entries(roundsData[activeRound].influencers).map(([influencerId, influencer]) => {
                 const isExpanded = expandedInfluencers.includes(influencerId)
@@ -279,8 +417,8 @@ export default function ImprovedMyCollection() {
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
-                            <span className="text-lg">{influencer.name[0]}</span>
+                          <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center font-bold">
+                            {influencer.name.charAt(0)}
                           </div>
                           <div>
                             <div className="font-bold">{influencer.name}</div>
@@ -337,8 +475,6 @@ export default function ImprovedMyCollection() {
                             </Button>
                             <Button
                               onClick={() => {
-                                // 해당 인플루언서의 화보 뽑기 페이지로 이동하는 로직
-                                // 실제 구현에서는 onNavigateToInfluencer(influencer.id) 같은 함수 호출
                                 alert(`${influencer.name}의 화보 뽑기 페이지로 이동합니다.`)
                               }}
                               className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white px-4 whitespace-nowrap"
@@ -359,31 +495,14 @@ export default function ImprovedMyCollection() {
                                   onClick={() => handleCardClick(card)}
                                   style={{ aspectRatio: '3/4' }}
                                 >
-                                  {/* 화보 이미지 */}
                                   <div className="w-full h-full bg-gray-700 flex items-center justify-center">
                                     <img
                                       src={card.image}
                                       alt={`${influencer.name} 화보`}
                                       className="w-full h-full object-cover"
-                                      onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                                        const target = e.currentTarget
-                                        const sibling = target.nextElementSibling as HTMLElement | null
-                                        target.style.display = 'none'
-                                        if (sibling) {
-                                          sibling.style.display = 'flex'
-                                        }
-                                      }}
                                     />
-                                    {/* 이미지 로드 실패 시 플레이스홀더 */}
-                                    <div 
-                                      className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-400 text-xs" 
-                                      style={{ display: 'none' }}
-                                    >
-                                      화보
-                                    </div>
                                   </div>
                                   
-                                  {/* 등급 배지 */}
                                   <div className={`absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                                     card.grade === 'S' ? 'bg-yellow-500 text-black' :
                                     card.grade === 'A' ? 'bg-blue-500 text-white' :
@@ -407,35 +526,201 @@ export default function ImprovedMyCollection() {
               })}
             </div>
           </TabsContent>
+
+          {/* 구매 상품 탭 */}
+          <TabsContent value="purchased">
+            {/* 라운드 구분 탭 */}
+            <div className="mb-6">
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {Object.entries(roundsData).map(([roundKey, round]) => (
+                  <Button
+                    key={roundKey}
+                    variant={activeRound === roundKey ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setActiveRound(roundKey as keyof RoundsData)}
+                    className={
+                      activeRound === roundKey
+                        ? "bg-[#FF0844] text-white hover:bg-[#FF0844]/90 whitespace-nowrap"
+                        : "text-gray-400 border-gray-600 hover:text-white hover:border-gray-400 whitespace-nowrap"
+                    }
+                  >
+                    {round.name}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* 구매 상품 리스트 */}
+            <div className="space-y-4">
+              {Object.keys(roundsData[activeRound].purchasedContent).length === 0 ? (
+                <div className="text-center py-12 text-gray-400">
+                  <p>구매한 상품이 없습니다.</p>
+                </div>
+              ) : (
+                Object.values(roundsData[activeRound].purchasedContent).map((content) => (
+                  <div key={content.id} className="bg-gray-900 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => togglePurchasedInfluencer(content.id)}
+                      className="w-full p-4 flex items-center justify-between hover:bg-gray-800 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center font-bold">
+                          {content.name.charAt(0)}
+                        </div>
+                        <div className="text-left">
+                          <h3 className="font-bold">{content.name}</h3>
+                          <p className="text-sm text-gray-400">
+                            구매한 상품 보기
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-gray-400">
+                        {expandedPurchased[activeRound]?.includes(content.id) ? "▲" : "▼"}
+                      </div>
+                    </button>
+
+                    {expandedPurchased[activeRound]?.includes(content.id) && (
+                      <div className="p-4 border-t border-gray-800 space-y-6">
+                        {/* B컷 화보 */}
+                        {content.bCutPhotos && content.bCutPhotos.length > 0 && (
+                          <div>
+                            <div className="flex items-center justify-between mb-3">
+                              <h4 className="font-semibold">B컷 화보 ({content.bCutPhotos.length}장)</h4>
+                              <Button
+                                size="sm"
+                                onClick={() => handleBulkDownload(content.name, content.bCutPhotos!)}
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                              >
+                                <Download className="w-4 h-4 mr-1" />
+                                일괄 다운로드
+                              </Button>
+                            </div>
+                            <div className="grid grid-cols-4 gap-3">
+                              {content.bCutPhotos.map((image, index) => (
+                                <div
+                                  key={index}
+                                  className="aspect-[3/4] rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                                  onClick={() => handleImageClick(image)}
+                                >
+                                  <img
+                                    src={image}
+                                    alt={`B컷 ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 올팩 */}
+                        {content.allPackPhotos && content.allPackPhotos.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-3">스페셜 포카 &gt; 올팩 ({content.allPackPhotos.length}장)</h4>
+                            <div className="grid grid-cols-4 gap-3">
+                              {content.allPackPhotos.map((image, index) => (
+                                <div
+                                  key={index}
+                                  className="aspect-[3/4] rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                                  onClick={() => handleImageClick(image)}
+                                >
+                                  <img
+                                    src={image}
+                                    alt={`올팩 ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* 스페셜팩 */}
+                        {content.specialPackPhotos && content.specialPackPhotos.length > 0 && (
+                          <div>
+                            <h4 className="font-semibold mb-3">스페셜 포카 &gt; 스페셜팩 ({content.specialPackPhotos.length}장)</h4>
+                            <div className="grid grid-cols-4 gap-3">
+                              {content.specialPackPhotos.map((image, index) => (
+                                <div
+                                  key={index}
+                                  className="aspect-[3/4] rounded-lg overflow-hidden cursor-pointer hover:scale-105 transition-transform"
+                                  onClick={() => handleImageClick(image)}
+                                >
+                                  <img
+                                    src={image}
+                                    alt={`스페셜팩 ${index + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </TabsContent>
         </Tabs>
+
+        {/* 모달들 */}
+        {showMyCollectionModal && selectedInfluencer && (
+          <MyCollectionModal
+            isOpen={showMyCollectionModal}
+            onClose={() => setShowMyCollectionModal(false)}
+            influencer={selectedInfluencer}
+          />
+        )}
+
+        {showCardDetailModal && selectedCard && (
+          <CardDetailModal
+            isOpen={showCardDetailModal}
+            onClose={() => setShowCardDetailModal(false)}
+            card={selectedCard}
+          />
+        )}
+
+        {showMissionModal && missionInfluencer && (
+          <MissionProgressModal
+            isOpen={showMissionModal}
+            onClose={() => setShowMissionModal(false)}
+            influencer={missionInfluencer}
+          />
+        )}
+
+        {/* 이미지 모달 (구매 상품용) */}
+        {showImageModal && (
+          <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+            <div className="relative max-w-3xl w-full">
+              <button
+                onClick={() => setShowImageModal(false)}
+                className="absolute top-4 right-4 z-10 bg-black/50 rounded-full p-2 hover:bg-black/70 transition-colors"
+              >
+                <X className="w-6 h-6 text-white" />
+              </button>
+              
+              <div className="bg-white rounded-lg overflow-hidden">
+                <img
+                  src={selectedImage}
+                  alt="확대 이미지"
+                  className="w-full h-auto max-h-[70vh] object-contain"
+                />
+                <div className="p-4 bg-gray-100 flex justify-center">
+                  <Button
+                    onClick={handleDownloadImage}
+                    className="bg-[#FF0844] hover:bg-[#FF0844]/90 text-white"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    다운로드
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-
-      {/* 내가 뽑은 화보 모달 */}
-      {showMyCollectionModal && selectedInfluencer && (
-        <MyCollectionModal
-          isOpen={showMyCollectionModal}
-          onClose={() => setShowMyCollectionModal(false)}
-          influencer={selectedInfluencer}
-        />
-      )}
-
-      {/* 화보 상세 모달 */}
-      {showCardDetailModal && selectedCard && (
-        <CardDetailModal
-          isOpen={showCardDetailModal}
-          onClose={() => setShowCardDetailModal(false)}
-          card={selectedCard}
-        />
-      )}
-
-      {/* 미션 진행상황 모달 */}
-      {showMissionModal && missionInfluencer && (
-        <MissionProgressModal
-          isOpen={showMissionModal}
-          onClose={() => setShowMissionModal(false)}
-          influencer={missionInfluencer}
-        />
-      )}
     </div>
   )
 }
@@ -522,22 +807,7 @@ const MyCollectionModal = ({ isOpen, onClose, influencer }: MyCollectionModalPro
                           src={card.image}
                           alt={`${influencer.name} 화보`}
                           className="w-full h-full object-cover"
-                          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                            const target = e.currentTarget
-                            const sibling = target.nextElementSibling as HTMLElement | null
-                            target.style.display = 'none'
-                            if (sibling) {
-                              sibling.style.display = 'flex'
-                            }
-                          }}
                         />
-                        {/* 이미지 로드 실패 시 플레이스홀더 */}
-                        <div 
-                          className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm" 
-                          style={{ display: 'none' }}
-                        >
-                          화보
-                        </div>
                       </div>
                       
                       {/* 등급 배지 */}
@@ -734,6 +1004,8 @@ const MissionProgressModal = ({ isOpen, onClose, influencer }: MissionProgressMo
     </div>
   )
 }
+
+// 화보 상세 모달 컴포넌트
 interface CardDetailModalProps {
   isOpen: boolean
   onClose: () => void
@@ -762,27 +1034,7 @@ const CardDetailModal = ({ isOpen, onClose, card }: CardDetailModalProps) => {
                 src={card.image}
                 alt={`${card.grade}급 화보`}
                 className="w-full h-full object-cover"
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                  const target = e.currentTarget
-                  const sibling = target.nextElementSibling as HTMLElement | null
-                  target.style.display = 'none'
-                  if (sibling) {
-                    sibling.style.display = 'flex'
-                  }
-                }}
               />
-              {/* 이미지 로드 실패 시 플레이스홀더 */}
-              <div 
-                className="w-full h-full bg-gray-700 flex flex-col items-center justify-center text-gray-400" 
-                style={{ display: 'none' }}
-              >
-                <div className="w-20 h-20 border-2 border-gray-500 rounded-lg flex items-center justify-center mb-4">
-                  <svg className="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-base">화보 이미지</span>
-              </div>
             </div>
             <div className={`absolute top-3 right-3 px-3 py-1.5 text-sm rounded font-bold ${
               card.grade === 'S' ? 'bg-yellow-500 text-black' :
