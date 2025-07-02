@@ -346,8 +346,11 @@ export default function ImprovedMyPage() {
         </div>
 
         {/* 메인 탭 네비게이션 */}
-        <Tabs value={activeTab} onValueChange={(value: string) => setActiveTab(value as "photos" | "purchased")}
- className="w-full">
+        <Tabs value={activeTab} onValueChange={(value: string) => {
+          setActiveTab(value as "photos" | "purchased")
+          // 탭 변경 시 항상 라운드1로 초기화
+          setActiveRound("round1")
+        }} className="w-full">
           <TabsList className="bg-gray-900 w-full mb-6">
             <TabsTrigger value="photos" className="flex-1 data-[state=active]:bg-[#FF0844]">
               화보 뽑기
